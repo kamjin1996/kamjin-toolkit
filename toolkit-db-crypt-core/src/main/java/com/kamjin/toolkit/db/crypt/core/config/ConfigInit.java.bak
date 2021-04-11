@@ -1,0 +1,182 @@
+package intercept.crypt.config;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Objects;
+import java.util.Properties;
+
+/**
+ * 配置参数载入
+ *
+ * @author kamjin1996
+
+ */
+@Slf4j
+public class ConfigInit {
+
+    public static String DbCrypt_SecretKey;
+    public static Boolean DbCrypt_Enable;
+
+    static {
+        // 固定读取外部配置文件
+        // fixationOutsideReadConfig();
+        // 动态读取内部配置文件
+        dynamicInsideReadConfig();
+    }
+
+    /**
+     * 获取外部的路径
+     *
+     * @return
+     */
+    private static String getOutsidePath() {
+        String path =
+                ConfigInit.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+        path = path.substring(1);
+        int endIndex = path.lastIndexOf("/");
+        path = path.substring(0, endIndex);
+        try {
+            path = java.net.URLDecoder.decode(path, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return path;
+    }
+
+    /** 固定的外部读取 */
+    private static void fixationOutsideReadConfig() {
+        Class<?> cls = ConfigInit.class;
+        Field[] fields = ConfigInit.class.getFields();
+        Properties prop = new Properties();
+        try {
+            Object obj = cls.newInstance();
+            if (fields.length > 0) {
+                propLoadByFileName(prop, "extra.properties");
+                propertyToField(obj, prop);
+            }
+        } catch (Exception e) {
+            log.info("load extra.properties faild,please check config file", e);
+        }
+    }
+
+    /** 动态的读取内部配置文件 */
+    private static void dynamicInsideReadConfig() {
+        Class cls = ConfigInit.class;
+        Properties prop = new Properties();
+        Object obj = null;
+        try {
+            obj = cls.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        try {
+            URL resource = ClassLoader.getSystemClassLoader().getResource("");
+            if (Objects.nonNull(resource)
+                    && Objects.requireNonNull(obj).getClass().getFields().length > 0) {
+                File pathFile = new File(resource.getFile());
+                if (pathFile.isDirectory()) {
+                    File[] files = pathFile.listFiles();
+                    if (Objects.nonNull(files) && files.length > 0) {
+                        readPropInitStaticField(obj, prop, files);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            log.info("load properties by classpath faild,please check config file", e);
+        }
+
+        // 优先取外部配置文件,尝试赋值外部配置文件的属性
+        try {
+            readPropInitStaticField(
+                    obj, prop, Objects.requireNonNull(new File(getOutsidePath()).listFiles()));
+        } catch (Exception e) {
+            log.info("load properties by outside file faild,please check config file");
+        }
+    }
+
+    /**
+     * 读取属性初始化对象静态字段
+     *
+     * @param instance
+     * @param prop
+     * @param sourceFiles
+     * @throws IOException
+     * @throws IllegalAccessException
+     */
+    private static void readPropInitStaticField(
+            Object instance, Properties prop, File[] sourceFiles)
+            throws IOException, IllegalAccessException {
+        if (sourceFiles.length > 0
+                && instance.getClass().getFields().length > 0
+                && Objects.nonNull(prop)) {
+            for (File outsideFile : Objects.requireNonNull(sourceFiles)) {
+                int modifyCount = 0;
+                if (isPropertiesFile(outsideFile)) {
+                    propLoadByFileName(prop, outsideFile.getName());
+                    modifyCount = propertyToField(instance, prop);
+                }
+                if (modifyCount > 0) {
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * 根据文件名加载为属性文件
+     *
+     * @param prop
+     * @param fileName
+     * @throws IOException
+     */
+    private static void propLoadByFileName(Properties prop, String fileName) throws IOException {
+        prop.load(
+                new InputStreamReader(
+                        Objects.requireNonNull(
+                                ClassLoader.getSystemClassLoader().getResourceAsStream(fileName)),
+                        StandardCharsets.UTF_8));
+    }
+
+    /**
+     * 检查是否是properties文件
+     *
+     * @param file
+     * @return
+     */
+    private static boolean isPropertiesFile(File file) {
+        return file.isFile() && file.getName().endsWith(".properties");
+    }
+
+    /**
+     * 属性转为字段值
+     *
+     * @param obj
+     * @param prop
+     * @return 成功赋值个数
+     * @throws IllegalAccessException
+     */
+    private static int propertyToField(Object obj, Properties prop) throws IllegalAccessException {
+        int modifyCount = 0;
+        for (Field field : obj.getClass().getFields()) {
+            String property = prop.getProperty(field.getName().replace("_", ".").toLowerCase());
+
+            if (Objects.isNull(property) || Objects.equals(property, "")) {
+                break;
+            }
+            Object value = property;
+            if (field.getType().isAssignableFrom(Boolean.class)) {
+                value = Boolean.valueOf(property);
+            } else if (field.getType().isAssignableFrom(Integer.class)) {
+                value = Integer.valueOf(property);
+            }
+            field.set(obj, value);
+            modifyCount++;
+        }
+        return modifyCount;
+    }
+}
