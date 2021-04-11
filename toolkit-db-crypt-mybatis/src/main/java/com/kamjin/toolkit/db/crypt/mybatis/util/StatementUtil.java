@@ -15,9 +15,9 @@ public final class StatementUtil {
     /**
      * 根据statementId获取运行的方法
      *
-     * @param statementId
-     * @return
-     * @throws ClassNotFoundException
+     * @param statementId statementId
+     * @return 函数
+     * @throws ClassNotFoundException 未找到class
      */
     public static Method deduceMethodById(String statementId) throws ClassNotFoundException {
         final Class<?> clazz = Class.forName(statementId.substring(0, statementId.lastIndexOf(".")));

@@ -10,16 +10,16 @@ public interface CryptExecutor {
     /**
      * 加密
      *
-     * @param str
-     * @return
+     * @param str 加密前字符串
+     * @return 加密后的字符串
      */
     String encrypt(String str);
 
     /**
      * 解密
      *
-     * @param str
-     * @return
+     * @param str 解密前字符串
+     * @return 解密后的字符串
      */
     String decrypt(String str);
 }

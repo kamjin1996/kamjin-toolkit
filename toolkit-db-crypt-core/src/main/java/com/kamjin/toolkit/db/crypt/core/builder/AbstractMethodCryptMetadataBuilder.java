@@ -34,16 +34,16 @@ public abstract class AbstractMethodCryptMetadataBuilder implements MethodCryptM
     /**
      * 构建解密处理器
      *
-     * @param m
-     * @return
+     * @param m 运行的dao函数
+     * @return 函数解密处理者
      */
     protected abstract MethodDecryptResolver buildDecryptResolver(Method m);
 
     /**
      * 构建加密处理器
      *
-     * @param m
-     * @return
+     * @param m 运行的dao函数
+     * @return 函数加密处理者
      */
     protected abstract MethodEncryptResolver buildEncryptResolver(Method m);
 

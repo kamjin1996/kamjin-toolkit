@@ -49,12 +49,6 @@ public class DefaultAESCodecFieldValueHandler extends AbstractCodecFiledValueHan
     private static final String BYTE_CONTROL = "utf-8";
     private static final String SECURE_RANDOM_INSTANCE_NAME = "SHA1PRNG";
 
-    /**
-     * 加密
-     *
-     * @param sSrc
-     * @return
-     */
     @Override
     protected String doEncrypt(String sSrc) {
         try {
@@ -78,12 +72,6 @@ public class DefaultAESCodecFieldValueHandler extends AbstractCodecFiledValueHan
         return sSrc;
     }
 
-    /**
-     * 解密
-     *
-     * @param sSrc
-     * @return
-     */
     @Override
     protected String doDecrypt(String sSrc) {
         try {
@@ -126,6 +114,8 @@ public class DefaultAESCodecFieldValueHandler extends AbstractCodecFiledValueHan
 
     /**
      * 检查SecretKey
+     *
+     * @param sKey secretKey
      */
     private void checkKey(String sKey) {
         if (Objects.isNull(sKey) || StringUtils.isBlank(sKey)) {

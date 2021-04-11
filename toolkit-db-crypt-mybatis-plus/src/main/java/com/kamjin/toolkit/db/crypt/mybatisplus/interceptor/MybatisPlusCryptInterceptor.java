@@ -118,12 +118,6 @@ public class MybatisPlusCryptInterceptor implements Interceptor {
         return null;//不会执行
     }
 
-    /**
-     * 解密结果
-     *
-     * @param result
-     * @return
-     */
     private Object decryptResult(Object result) {
         return this.simpleResultDecryptResolver.processDecrypt(result);
     }
@@ -131,10 +125,10 @@ public class MybatisPlusCryptInterceptor implements Interceptor {
     /**
      * 执行setParameter
      *
-     * @param invocation
-     * @param metadata
-     * @return
-     * @throws Exception
+     * @param invocation invocation
+     * @param metadata 预加密的元数据
+     * @return setParameter执行结果
+     * @throws Exception 其他异常
      */
     @SuppressWarnings("rawtypes")
     private Object invokeSetParameter(Invocation invocation, PreCodecMetadata metadata) throws Exception {
@@ -175,8 +169,8 @@ public class MybatisPlusCryptInterceptor implements Interceptor {
     /**
      * 在paramObject里加密数据
      *
-     * @param mqValuePlaceholders
-     * @param paramObject
+     * @param mqValuePlaceholders mybatisplus的值占位符
+     * @param paramObject 参数对象
      */
     @SuppressWarnings("all")
     private void encryptParam(Collection<String> mqValuePlaceholders, Object paramObject) {

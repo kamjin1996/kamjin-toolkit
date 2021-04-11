@@ -43,11 +43,6 @@ public class MybatisCryptInterceptor implements Interceptor {
     private String primaryKeyName;
 
     /**
-     * 存储源对象和新对象
-     */
-    //public static final ConcurrentHashMap<Object, Object> OLD_AND_NEW_OBJ_MAP = new ConcurrentHashMap<>();
-
-    /**
      * 需加解密处理方法的信息
      */
     private static final ConcurrentHashMap<String, MethodCryptMetadata> METHOD_ENCRYPT_MAP = new ConcurrentHashMap<>();
@@ -71,7 +66,7 @@ public class MybatisCryptInterceptor implements Interceptor {
     /**
      * 如果是插入，则将id返回
      *
-     * @param currentCommandType
+     * @param currentCommandType 本次的sqlCommand类型
      */
     private void ifInsertReturnId(SqlCommandType currentCommandType) {
         boolean isInsert = Objects.equals("INSERT", currentCommandType.name());
@@ -113,6 +108,10 @@ public class MybatisCryptInterceptor implements Interceptor {
 
     /**
      * 修复selectKey无法赋值给源对象(源对象被clone,因为需要避免重复加密)
+     *
+     * @param reference keyGen的引用
+     * @throws IllegalAccessException 权限异常
+     * @throws NoSuchFieldException   没有对应属性异常
      */
     private void returnIdToSourceBean(KeyGenerateReference reference) throws IllegalAccessException, NoSuchFieldException {
         if (reference != null) {

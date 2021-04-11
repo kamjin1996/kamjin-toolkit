@@ -57,7 +57,7 @@ public final class CryptHelper {
     /**
      * 获取keyGen的引用
      *
-     * @return
+     * @return keyGen引用
      */
     public static KeyGenerateReference getKeyGenerateReference() {
         return KEY_GENERATE_REFERENCE_THREAD_LOCAL.get();

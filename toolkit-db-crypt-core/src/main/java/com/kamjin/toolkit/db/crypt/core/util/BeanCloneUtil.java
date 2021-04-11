@@ -47,7 +47,7 @@ public final class BeanCloneUtil {
      *
      * @param value 原始对象
      * @return 新的对象
-     * @throws IllegalAccessException
+     * @throws IllegalAccessException 权限异常
      */
     private static Object createObject(Object value) throws IllegalAccessException {
         try {
@@ -66,10 +66,10 @@ public final class BeanCloneUtil {
      * @param level 复制深度。小于0为无限深度，即将深入到最基本类型和Object类级别的数据复制；
      *              大于0则按照其值复制到指定深度的数据，等于0则直接返回对象本身而不进行任何复制行为。
      * @return 返回复制后的对象
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     * @throws InvocationTargetException
-     * @throws NoSuchMethodException
+     * @throws IllegalAccessException 权限异常
+     * @throws InstantiationException 实例化异常
+     * @throws InvocationTargetException 执行异常
+     * @throws NoSuchMethodException 没有对应函数异常
      */
     public static Object clone(Object value, int level) throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException {
         if (value == null) {
@@ -156,10 +156,10 @@ public final class BeanCloneUtil {
      *
      * @param value 原始对象
      * @return 复制后的对象，只复制一层
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     * @throws InvocationTargetException
-     * @throws NoSuchMethodException
+     * @throws IllegalAccessException 权限异常
+     * @throws InstantiationException 实例化异常
+     * @throws InvocationTargetException 执行异常
+     * @throws NoSuchMethodException 没有函数异常
      */
     public static Object clone(Object value) throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException {
         return clone(value, 1);
@@ -170,10 +170,10 @@ public final class BeanCloneUtil {
      *
      * @param value 原始对象
      * @return 复制后的对象
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     * @throws InvocationTargetException
-     * @throws NoSuchMethodException
+     * @throws IllegalAccessException 权限异常
+     * @throws InstantiationException 实例化异常
+     * @throws InvocationTargetException 执行异常
+     * @throws NoSuchMethodException 没有函数异常
      */
     public static Object deepClone(Object value) throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException {
         return clone(value, -1);

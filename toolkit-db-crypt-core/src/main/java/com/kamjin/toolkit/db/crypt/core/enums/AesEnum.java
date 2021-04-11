@@ -20,13 +20,13 @@ public enum AesEnum {
 
     AES256("AES-256", 256, 32, 14);
 
-    private String standard;
+    private final String standard;
 
-    private int standSupport;
+    private final int standSupport;
 
-    private int secretKeyLength;
+    private final int secretKeyLength;
 
-    private int round;
+    private final int round;
 
     public String getStandard() {
         return standard;

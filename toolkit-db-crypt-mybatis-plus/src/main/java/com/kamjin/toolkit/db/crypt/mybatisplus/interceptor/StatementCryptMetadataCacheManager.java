@@ -51,8 +51,8 @@ public class StatementCryptMetadataCacheManager {
     /**
      * 获取缓存的statement预加密元信息
      *
-     * @param statementId
-     * @return
+     * @param statementId statementId
+     * @return 预加密的参数元信息
      */
     public PreCodecMetadata getCachedStatementPreCodecMetadata(String statementId) {
         return STATEMENT_PRE_CODEC_METADATA_CACHE.computeIfAbsent(statementId,
@@ -67,11 +67,11 @@ public class StatementCryptMetadataCacheManager {
     }
 
     /**
-     * 获取缓存的mq占位符列表
+     * 获取缓存的mp占位符列表
      *
-     * @param wrapper
-     * @param metadata
-     * @return
+     * @param wrapper  本次使用的mybatisPlus的wrapper对象
+     * @param metadata 预加密的参数元信息
+     * @return mp参数占位符
      */
     public Collection<String> getCachedMethodMqPlaceHolders(Wrapper<?> wrapper, PreCodecMetadata metadata, BoundSql boundSql) {
         return STATEMENT_UNIQUE_KEY_PLACEHOLDERS_CACHE.computeIfAbsent(metadata.deduceStatementUniqueKey(boundSql),
@@ -81,9 +81,9 @@ public class StatementCryptMetadataCacheManager {
     /**
      * 获取缓存的方法加密元数据
      *
-     * @param statementId
-     * @param runningMethod
-     * @return
+     * @param statementId   statementId
+     * @param runningMethod 运行中的函数
+     * @return 函数加密元信息
      */
     public MethodCryptMetadata getCachedMethodCryptMetaData(String statementId, Method runningMethod) {
         return STATEMENT_METHOD_ENCRYPT_MAP.computeIfAbsent(statementId,
@@ -93,14 +93,15 @@ public class StatementCryptMetadataCacheManager {
     /**
      * 根据wrapper和加密元数据获取mp值下标列表
      *
-     * @param wrapper
-     * @param metadata
-     * @return
+     * @param wrapper  本次使用的mybatisPlus的wrapper对象
+     * @param metadata 预加密的参数元信息
+     * @return mp参数占位符
      */
     private Collection<String> resolverMpValuePlaceHolders(Wrapper<?> wrapper, PreCodecMetadata metadata) {
         //查看类型 如果是lambadaQueryWrapper 需要解析SQLSegment，如果是lambadaUpdateWrapper 需要解析SQLSegment和setSql
         MergeSegments expression = wrapper.getExpression();
-        if (Objects.isNull(expression)) {//没有参数就是EmptyWrapper，获取的expression为空
+        if (Objects.isNull(expression)) {
+            //没有参数就是EmptyWrapper，获取的expression为空
             return new HashSet<>();
         }
 
@@ -120,9 +121,9 @@ public class StatementCryptMetadataCacheManager {
     /**
      * 解析sqlSegment获取需加密字段mq映射的key
      *
-     * @param sqlSegmentOrSetSqls
-     * @param beforeInterceptMetadata
-     * @return
+     * @param sqlSegmentOrSetSqls sqlSegment或者setSql的列表
+     * @param beforeInterceptMetadata 加密的参数元信息
+     * @return mp参数占位符
      */
     private Set<String> parseSqlSegmentOrSetSqlGainIndex(List<String> sqlSegmentOrSetSqls, PreCodecMetadata beforeInterceptMetadata) {
         Set<String> mqValuePlaceholders = new HashSet<>();
@@ -150,9 +151,9 @@ public class StatementCryptMetadataCacheManager {
     /**
      * 获取预加密的元素列表
      *
-     * @param statementId
-     * @return
-     * @throws ClassNotFoundException
+     * @param statementId statementId
+     * @return 预加密的参数元信息
+     * @throws ClassNotFoundException 未找到class异常
      */
     @SuppressWarnings("rawtypes")
     private PreCodecMetadata obtainPreCodecMetadata(String statementId) throws ClassNotFoundException {

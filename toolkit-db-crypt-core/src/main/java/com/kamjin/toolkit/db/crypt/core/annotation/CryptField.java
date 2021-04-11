@@ -9,7 +9,6 @@ import java.lang.annotation.*;
  * 加解密注解
  *
  * @author kamjin1996
-
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

@@ -11,13 +11,13 @@ import com.kamjin.toolkit.db.crypt.core.handler.DefaultAESCodecFieldValueHandler
  */
 public class CryptExecutorFactory {
 
-    private static CryptExecutor DEFAULT_HANDLER = new DefaultCryptExecutor(new DefaultAESCodecFieldValueHandler());
+    private static final CryptExecutor DEFAULT_HANDLER = new DefaultCryptExecutor(new DefaultAESCodecFieldValueHandler());
 
     /**
      * 根据cryptField中不同的配置
      *
-     * @param cryptField
-     * @return CryptExecutor
+     * @param cryptField 加密的filed注解
+     * @return CryptExecutor 加解密执行器
      */
     public static CryptExecutor getTypeHandler(CryptField cryptField) {
         CryptExecutor cryptExecutor;

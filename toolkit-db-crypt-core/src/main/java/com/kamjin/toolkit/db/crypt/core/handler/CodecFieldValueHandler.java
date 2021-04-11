@@ -15,16 +15,16 @@ public interface CodecFieldValueHandler {
     /**
      * 加密
      *
-     * @param fieldValue
-     * @return
+     * @param fieldValue 字段值
+     * @return 加密后的字段值
      */
     String encrypt(String fieldValue);
 
     /**
      * 解密
      *
-     * @param fieldValue
-     * @return
+     * @param fieldValue 字段值
+     * @return 解密后的字段值
      */
     String decrypt(String fieldValue);
 

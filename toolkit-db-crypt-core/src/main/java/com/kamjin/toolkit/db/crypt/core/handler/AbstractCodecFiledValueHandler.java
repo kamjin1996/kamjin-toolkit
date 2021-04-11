@@ -25,8 +25,8 @@ public abstract class AbstractCodecFiledValueHandler implements CodecFieldValueH
     /**
      * 加密实现
      *
-     * @param sSrc
-     * @return
+     * @param sSrc 加密前字符串
+     * @return 加密后结果
      */
     protected abstract String doEncrypt(String sSrc);
 
@@ -38,8 +38,8 @@ public abstract class AbstractCodecFiledValueHandler implements CodecFieldValueH
     /**
      * 解密实现
      *
-     * @param sSrc
-     * @return
+     * @param sSrc 解密前字符串
+     * @return 解密后结果
      */
     protected abstract String doDecrypt(String sSrc);
 

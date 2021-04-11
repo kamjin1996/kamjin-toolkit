@@ -75,7 +75,8 @@ public class PreCodecMetadata {
      * 推断出statementId和sql语句的hashcode获取唯一key
      * 当前key构成: statementId + boundSql中sql的hashCode
      *
-     * @return
+     * @param boundSql 当前sql对象
+     * @return 当前statement结合参数的唯一的key
      */
     public String deduceStatementUniqueKey(BoundSql boundSql) {
         return daoStatementId + boundSql.getSql().hashCode();
