@@ -27,7 +27,7 @@
 
 + 使用简单灵活，只需在需加密的数据模型类字段上、或mapperInterface的方法参数前，加@CryptField 注解，便可对目标加解密
 
-+ 配置方式简单，只需配置密钥和加密方式，主键名称即可
++ 配置方式简单灵活，只需配置密钥、加密方式与主键名称，可自定义配置项a.b.c形式
 
 + 适用广，适用任何采用了Mybatis或MybatisPlus作为DAO层的JAVA项目
 
@@ -43,11 +43,9 @@ pom.xml文件写入以下坐标即可:
 
 #### 配置方式:
 
-1. spring配置文件形式：
+1. springboot的yam配置方式：
    _PS：关于参数的key，可以取任意参数，只要确保能被spring解析到即可。
    
-      yam配置方式：
-      
        dbcrypt:
          secretkey: 123456789012345678901234 #加密的secretkey，需要注意长度，如果是AES加密（默认），需要和AES加密匹配才行
          enable: true #当前插件的加解密是否启用
@@ -81,21 +79,19 @@ pom.xml文件写入以下坐标即可:
 
 
 配置完毕，注意上例中加密方式为AES192标准，如有需要请改为自己需要的标准，并且secretKey长度要匹配。
-
-
-#### 注意:
-
-假如是比较老的项目，插件的注册也可以在mybatis.xml中完成，如下：
+<br>
+项目如果较久远，采用mybatis.xml注册插件：
 
         <plugins>
             <plugin interceptor="com.kamjin.toolkit.db.crypt.mybatisplus.interceptor.MybatisPlusCryptInterceptor"/>
         </plugins>
-
-其他bean（DbcryptProperties类），请在applicationContext.xml中定义，并配置AES加密标准、密钥和是否启用即可。
+其他bean定义在xml中由spring维护即可
 
 #### 使用方式:
 
-在需要加密的数据模型字段上注解@CryptField，也支持在mapper入参前注解@CryptField； 需要注意的是，暂不支持在数据模型的父类注解，入参是子类的形式。
+类字段注解@CryptField，也支持在mapper入参前注解@CryptField
+
+常见用法，pojo的字段上注解
 
 + 字段上使用
 
@@ -109,18 +105,18 @@ _附上快速开始的demo地址：
 https://github.com/kamjin1996/cryptdemo
 
 ### 特别说明：
- 1.此插件并不支持mybatis逆向生成的example类（用于条件拼接查询）。 即使example类作为条件查询的入参，如果项目中有用到example的地方，又希望加密条件中的字段，那么改为实体类的形式进行条件查询即可
+ 1.不支持mybatis逆向生成的example类（用于条件拼接查询）。 即使example类作为条件查询的入参，如果项目中有用到example的地方，又希望加密条件中的字段，那么改为实体类的形式进行条件查询即可
  
- 2.因为字段加密，一切模糊查询都将失效，模糊查询的关键词加密后是完全不同的字符串，即使未加密的数据库字符串与关键词很相似，也是无法查询的
+ 2.因为字段加密会改变原有值落库存储，一切模糊查询都将失效，模糊查询的关键词加密后是完全不同的字符串，即使未加密的数据库字符串与关键词很相似，也是无法查询的
 
- 3.如果项目DAO层是Mybatis，请使用MybatisCryptInterceptor，DAO层如果是MybatisPlus，请使用MybatisPlusCryptInterceptor，不可同时注册两个插件
+ 3.若项目使用Mybatis，请使用MybatisCryptInterceptor，如果是MybatisPlus，请使用MybatisPlusCryptInterceptor，MybatisPlusCryptInterceptor也兼容Mybatis，但不可同时注册两个插件
 
 ## 最后：
 - 项目是个人闲暇之余来维护的，后续会考虑支持更多的功能、用法
 
 - 当前项目性能上做了些许优化，日志也并不多，可放心使用
 
-- 欢迎提出更好的意见，帮助完善项目，联系我：QQ邮箱1569558447@qq.com
+- 欢迎提出更好的意见，帮助完善，联系我：QQ邮箱1569558447@qq.com
 
 
 <br>
