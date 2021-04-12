@@ -14,6 +14,7 @@
 
 
 <div id="db.crypt">数据库加解密</div>
+
 #### 描述：
  简单快捷的数据加解密插件，支持全局数据库加密 -> 入库加密 & 出库解密
 
@@ -109,11 +110,11 @@ _附上快速开始的demo地址：
 https://github.com/kamjin1996/cryptdemo
 
 ### 特别说明：
-1.此插件并不支持mybatis逆向生成的example类（用于条件拼接查询）。 即使example类作为条件查询的入参，如果项目中有用到example的地方，又希望加密条件中的字段，那么改为实体类的形式进行条件查询即可
- <br>
-2.因为字段加密，一切模糊查询都将失效，模糊查询的关键词加密后是完全不同的字符串，即使未加密的数据库字符串与关键词很相似，也是无法查询的
- <br>
-3.如果项目DAO层是Mybatis，请使用MybatisCryptInterceptor，DAO层如果是MybatisPlus，请使用MybatisPlusCryptInterceptor，不可同时注册两个插件
+ 1.此插件并不支持mybatis逆向生成的example类（用于条件拼接查询）。 即使example类作为条件查询的入参，如果项目中有用到example的地方，又希望加密条件中的字段，那么改为实体类的形式进行条件查询即可
+ 
+ 2.因为字段加密，一切模糊查询都将失效，模糊查询的关键词加密后是完全不同的字符串，即使未加密的数据库字符串与关键词很相似，也是无法查询的
+
+ 3.如果项目DAO层是Mybatis，请使用MybatisCryptInterceptor，DAO层如果是MybatisPlus，请使用MybatisPlusCryptInterceptor，不可同时注册两个插件
 
 ## 最后：
 - 项目是做为个人项目来维护的，后续会考虑支持更多的功能、用法
