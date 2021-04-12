@@ -9,6 +9,7 @@
         <version>2.1.RELEASE</version>
     </parent>
 
+    <packaging>jar</packaging>
     <artifactId>toolkit-db-crypt-core</artifactId>
 
 </project>
