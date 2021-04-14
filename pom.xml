@@ -9,9 +9,12 @@
     <version>2.1.RELEASE</version>
 
     <modules>
+        <module>toolkit-base</module>
         <module>toolkit-db-crypt-core</module>
         <module>toolkit-db-crypt-mybatis</module>
         <module>toolkit-db-crypt-mybatis-plus</module>
+        <module>toolkit-cache-redis</module>
+        <module>toolkit-lock-redission</module>
     </modules>
 
     <properties>
@@ -26,6 +29,24 @@
 
     <dependencyManagement>
         <dependencies>
+
+            <dependency>
+                <groupId>com.github.kamjin1996</groupId>
+                <artifactId>toolkit-cache-redis</artifactId>
+                    <version>${release-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.kamjin1996</groupId>
+                <artifactId>toolkit-base</artifactId>
+                    <version>${release-version}</version>
+            </dependency>
+
+             <dependency>
+                <groupId>com.github.kamjin1996</groupId>
+                <artifactId>toolkit-lock-redission</artifactId>
+                    <version>${release-version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>com.github.kamjin1996</groupId>
