@@ -20,7 +20,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <release-version>2.1.RELEASE</release-version>
-        <mybatis-version>3.4.6</mybatis-version>
+        <mybatis-version>3.5.6</mybatis-version>
         <mybatis-plus-version>3.3.0</mybatis-plus-version>
     </properties>
 
