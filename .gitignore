@@ -42,5 +42,5 @@ build/
 *.env.json
 /BASE_PATH_IS_UNDEFINED/
 /.gradle/
-mybatis-plus-demo/
-/mybatis-plus-demo/
+db-crypt-mybatis-plus-demo
+./db-crypt-mybatis-plus-demo
