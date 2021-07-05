@@ -12,6 +12,7 @@ public class SimpleMethodEncryptResolver implements MethodEncryptResolver {
     private MethodAnnotationEncryptParameter encryptParameter;
 
     public SimpleMethodEncryptResolver() {
+        this.encryptParameter = new MethodAnnotationEncryptParameter();
     }
 
     public SimpleMethodEncryptResolver(MethodAnnotationEncryptParameter encryptParameter) {

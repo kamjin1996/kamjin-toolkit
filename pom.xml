@@ -6,7 +6,7 @@
     <groupId>com.github.kamjin1996</groupId>
     <artifactId>kamjin-toolkit</artifactId>
     <packaging>pom</packaging>
-    <version>2.1.RELEASE</version>
+    <version>2.2.1.RELEASE</version>
 
     <modules>
         <module>toolkit-db-crypt-core</module>
@@ -19,7 +19,7 @@
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <release-version>2.1.RELEASE</release-version>
+        <release-version>2.2.1.RELEASE</release-version>
         <mybatis-version>3.5.6</mybatis-version>
         <mybatis-plus-version>3.3.0</mybatis-plus-version>
     </properties>

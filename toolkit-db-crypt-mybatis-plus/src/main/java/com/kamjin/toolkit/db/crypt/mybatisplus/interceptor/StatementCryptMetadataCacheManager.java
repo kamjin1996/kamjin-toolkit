@@ -9,6 +9,7 @@ import com.kamjin.toolkit.db.crypt.core.annotation.CryptField;
 import com.kamjin.toolkit.db.crypt.core.resolver.MethodCryptMetadata;
 import com.kamjin.toolkit.db.crypt.mybatis.builder.MybatisMethodCryptMetadataBuilder;
 import com.kamjin.toolkit.db.crypt.mybatis.util.StatementUtil;
+import com.kamjin.toolkit.db.crypt.mybatisplus.builder.MybatisPlusMethodCryptMetadataBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.mapping.BoundSql;
 import org.springframework.core.GenericTypeResolver;
@@ -87,7 +88,7 @@ public class StatementCryptMetadataCacheManager {
      */
     public MethodCryptMetadata getCachedMethodCryptMetaData(String statementId, Method runningMethod) {
         return STATEMENT_METHOD_ENCRYPT_MAP.computeIfAbsent(statementId,
-                id -> new MybatisMethodCryptMetadataBuilder(runningMethod).build());
+                id -> new MybatisPlusMethodCryptMetadataBuilder(runningMethod).build());
     }
 
     /**
