@@ -2,9 +2,6 @@ package com.kamjin.toolkit.db.crypt.core.handler;
 
 import com.kamjin.toolkit.db.crypt.core.bean.DbcryptProperties;
 
-import java.util.Optional;
-import java.util.function.Consumer;
-
 /**
  * @author kam
  * @since 2021/4/8
@@ -15,7 +12,23 @@ import java.util.function.Consumer;
  */
 public abstract class AbstractCodecFiledValueHandler implements CodecFieldValueHandler {
 
-    private boolean enable = false;
+    private DbcryptProperties dbcryptProperties;
+
+    public AbstractCodecFiledValueHandler() {
+
+    }
+
+    public AbstractCodecFiledValueHandler(DbcryptProperties dbcryptProperties) {
+        this.dbcryptProperties = dbcryptProperties;
+    }
+
+    public DbcryptProperties getDbcryptProperties() {
+        return dbcryptProperties;
+    }
+
+    public void setDbcryptProperties(DbcryptProperties dbcryptProperties) {
+        this.dbcryptProperties = dbcryptProperties;
+    }
 
     @Override
     public String encrypt(String sSrc) {
@@ -44,13 +57,7 @@ public abstract class AbstractCodecFiledValueHandler implements CodecFieldValueH
     protected abstract String doDecrypt(String sSrc);
 
     private boolean isEnable() {
-        return assignment(x -> enable = x.getEnable()) && enable;
-    }
-
-    private boolean assignment(Consumer<? super DbcryptProperties> consumer) {
-        Optional<DbcryptProperties> dbcrypt = DbcryptProperties.getInstance();
-        dbcrypt.ifPresent(consumer);
-        return dbcrypt.isPresent();
+        return this.dbcryptProperties.getEnable();
     }
 
 }

@@ -1,6 +1,7 @@
 package com.kamjin.toolkit.db.crypt.core.executor;
 
 import com.kamjin.toolkit.db.crypt.core.annotation.CryptField;
+import com.kamjin.toolkit.db.crypt.core.bean.DbcryptProperties;
 import com.kamjin.toolkit.db.crypt.core.exception.DbCryptRuntimeException;
 import com.kamjin.toolkit.db.crypt.core.handler.DefaultAESCodecFieldValueHandler;
 
@@ -11,7 +12,7 @@ import com.kamjin.toolkit.db.crypt.core.handler.DefaultAESCodecFieldValueHandler
  */
 public class CryptExecutorFactory {
 
-    private static final CryptExecutor DEFAULT_HANDLER = new DefaultCryptExecutor(new DefaultAESCodecFieldValueHandler());
+    private static final CryptExecutor DEFAULT_HANDLER = new DefaultCryptExecutor(new DefaultAESCodecFieldValueHandler(DbcryptProperties.buildDefault()));
 
     /**
      * 根据cryptField中不同的配置

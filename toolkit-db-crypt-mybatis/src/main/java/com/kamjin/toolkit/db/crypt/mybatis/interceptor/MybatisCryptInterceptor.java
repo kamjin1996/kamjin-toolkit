@@ -2,6 +2,7 @@ package com.kamjin.toolkit.db.crypt.mybatis.interceptor;
 
 import com.kamjin.toolkit.db.crypt.core.bean.DbcryptProperties;
 import com.kamjin.toolkit.db.crypt.core.bean.KeyGenerateReference;
+import com.kamjin.toolkit.db.crypt.core.exception.DbCryptRuntimeException;
 import com.kamjin.toolkit.db.crypt.core.resolver.MethodCryptMetadata;
 import com.kamjin.toolkit.db.crypt.core.util.CryptHelper;
 import com.kamjin.toolkit.db.crypt.mybatis.builder.MybatisMethodCryptMetadataBuilder;
@@ -38,14 +39,25 @@ public class MybatisCryptInterceptor implements Interceptor {
 
     private static final Logger log = LoggerFactory.getLogger(MybatisCryptInterceptor.class);
 
-    private boolean switchCrypt = false;
-
-    private String primaryKeyName;
+    /**
+     * 加密参数属性
+     */
+    private DbcryptProperties dbcryptProperties;
 
     /**
      * 需加解密处理方法的信息
      */
     private static final ConcurrentHashMap<String, MethodCryptMetadata> METHOD_ENCRYPT_MAP = new ConcurrentHashMap<>();
+
+    public MybatisCryptInterceptor(DbcryptProperties dbcryptProperties) {
+        if (Objects.isNull(dbcryptProperties)) {
+            throw new DbCryptRuntimeException("dbcryptProperties must not null");
+        }
+        this.dbcryptProperties = dbcryptProperties;
+    }
+
+    private MybatisCryptInterceptor() {
+    }
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
@@ -61,6 +73,10 @@ public class MybatisCryptInterceptor implements Interceptor {
         } else {
             return invocation.proceed();
         }
+    }
+
+    private boolean isSwitchCrypt() {
+        return this.dbcryptProperties.getEnable();
     }
 
     /**
@@ -89,21 +105,11 @@ public class MybatisCryptInterceptor implements Interceptor {
 
     @Override
     public void setProperties(Properties properties) {
-        DbcryptProperties.getInstance().ifPresent(x -> {
-            this.primaryKeyName = x.getPrimaryKeyName();
-        });
     }
 
     private MethodCryptMetadata getCachedMethodCryptMetaData(MappedStatement mappedStatement, Method runningMethod) {
         return METHOD_ENCRYPT_MAP.computeIfAbsent(mappedStatement.getId(),
                 id -> new MybatisMethodCryptMetadataBuilder(runningMethod).build());
-    }
-
-    private boolean isSwitchCrypt() {
-        DbcryptProperties.getInstance().ifPresent(x -> {
-            this.switchCrypt = x.getEnable();
-        });
-        return switchCrypt;
     }
 
     /**
@@ -118,9 +124,9 @@ public class MybatisCryptInterceptor implements Interceptor {
             Object sourceObj = reference.getOriginPojo();
             Object cloneObj = reference.getClonePojo();
 
-            Field sourceObjFieldId = sourceObj.getClass().getDeclaredField(primaryKeyName);
+            Field sourceObjFieldId = sourceObj.getClass().getDeclaredField(this.dbcryptProperties.getPrimaryKeyName());
             sourceObjFieldId.setAccessible(true);
-            Field cloneObjFieldId = cloneObj.getClass().getDeclaredField(primaryKeyName);
+            Field cloneObjFieldId = cloneObj.getClass().getDeclaredField(this.dbcryptProperties.getPrimaryKeyName());
             cloneObjFieldId.setAccessible(true);
             Object cloneObjFieldIdVal = cloneObjFieldId.get(cloneObj);
             if (Objects.nonNull(cloneObjFieldIdVal)) {

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.AbstractWrapper;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.kamjin.toolkit.db.crypt.core.bean.DbcryptProperties;
+import com.kamjin.toolkit.db.crypt.core.exception.DbCryptRuntimeException;
 import com.kamjin.toolkit.db.crypt.core.handler.CodecFieldValueHandler;
 import com.kamjin.toolkit.db.crypt.core.handler.DefaultAESCodecFieldValueHandler;
 import com.kamjin.toolkit.db.crypt.core.resolver.MethodCryptMetadata;
@@ -27,7 +28,10 @@ import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Properties;
 
 /**
  * @author kam
@@ -52,38 +56,48 @@ public class MybatisPlusCryptInterceptor implements Interceptor {
     private static final Logger log = LoggerFactory.getLogger(MybatisPlusCryptInterceptor.class);
 
     /**
-     * 是否开启加解密
+     * 数据库加密属性
      */
-    private boolean switchCrypt;
+    private DbcryptProperties dbcryptProperties;
 
     /**
      * 字段值codec处理器
      */
-    private final CodecFieldValueHandler codecFieldValueHandler;
+    private CodecFieldValueHandler codecFieldValueHandler;
 
     /**
      * 唯一结果处理
      */
-    private final MethodDecryptResolver simpleResultDecryptResolver;
+    private MethodDecryptResolver simpleResultDecryptResolver;
 
     /**
      * statement加密元数据缓存管理器
      */
-    private final StatementCryptMetadataCacheManager metadataCacheManager;
+    private StatementCryptMetadataCacheManager metadataCacheManager;
 
     /**
      * 预加密的参数上下文信息
      */
     private static final ThreadLocal<PreCodecMetadata> CODEC_METADATA_THREAD_LOCAL = new ThreadLocal<>();
 
-    public MybatisPlusCryptInterceptor() {
-        this(new DefaultAESCodecFieldValueHandler());
+    public MybatisPlusCryptInterceptor(DbcryptProperties dbcryptProperties) {
+        this(dbcryptProperties, new DefaultAESCodecFieldValueHandler(dbcryptProperties));
     }
 
-    public MybatisPlusCryptInterceptor(CodecFieldValueHandler codecFieldValueHandler) {
+    public MybatisPlusCryptInterceptor(DbcryptProperties dbcryptProperties, CodecFieldValueHandler codecFieldValueHandler) {
+        if (Objects.isNull(dbcryptProperties)) {
+            throw new DbCryptRuntimeException("dbcryptProperties must not null");
+        }
+        if (Objects.isNull(codecFieldValueHandler)) {
+            throw new DbCryptRuntimeException("codecFieldValueHandler must not null");
+        }
+        this.dbcryptProperties = dbcryptProperties;
         this.codecFieldValueHandler = codecFieldValueHandler;
         this.simpleResultDecryptResolver = new SimpleMethodDecryptResolver();
         this.metadataCacheManager = new StatementCryptMetadataCacheManager();
+    }
+
+    private MybatisPlusCryptInterceptor() {
     }
 
     @Override
@@ -126,7 +140,7 @@ public class MybatisPlusCryptInterceptor implements Interceptor {
      * 执行setParameter
      *
      * @param invocation invocation
-     * @param metadata 预加密的元数据
+     * @param metadata   预加密的元数据
      * @return setParameter执行结果
      * @throws Exception 其他异常
      */
@@ -170,7 +184,7 @@ public class MybatisPlusCryptInterceptor implements Interceptor {
      * 在paramObject里加密数据
      *
      * @param mqValuePlaceholders mybatisplus的值占位符
-     * @param paramObject 参数对象
+     * @param paramObject         参数对象
      */
     @SuppressWarnings("all")
     private void encryptParam(Collection<String> mqValuePlaceholders, Object paramObject) {
@@ -194,9 +208,6 @@ public class MybatisPlusCryptInterceptor implements Interceptor {
     }
 
     private boolean isSwitchCrypt() {
-        DbcryptProperties.getInstance().ifPresent(x -> {
-            this.switchCrypt = x.getEnable();
-        });
-        return switchCrypt;
+        return this.dbcryptProperties.getEnable();
     }
 }

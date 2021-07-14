@@ -3,7 +3,6 @@ package com.kamjin.toolkit.db.crypt.core.bean;
 import com.kamjin.toolkit.db.crypt.core.enums.AesEnum;
 
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * 数据库加密配置属性映射
@@ -11,8 +10,6 @@ import java.util.Optional;
  * @author kamjin1996
  */
 public class DbcryptProperties {
-
-    private static DbcryptProperties INSTANCE = new DbcryptProperties();
 
     private AesEnum aes;
 
@@ -35,19 +32,26 @@ public class DbcryptProperties {
         this.secretkey = secretkey;
         this.enable = enable;
         this.primaryKeyName = primaryKeyName;
-        INSTANCE = this;
     }
 
-    public static Optional<DbcryptProperties> getInstance() {
-        return Optional.ofNullable(INSTANCE);
+    private static void check(String secretkey, Boolean enable, AesEnum aes) {
+        if (Objects.isNull(secretkey)) {
+            throw new IllegalArgumentException("secretkey not be null");
+        }
+        if (Objects.isNull(enable)) {
+            throw new IllegalArgumentException("enable not be null");
+        }
+        if (Objects.isNull(aes)) {
+            throw new IllegalArgumentException("aes not be null");
+        }
     }
 
     public AesEnum getAes() {
         return aes;
     }
 
-    public void setAes(String aes) {
-        this.aes = AesEnum.byName(aes);
+    public void setAes(AesEnum aes) {
+        this.aes = aes;
     }
 
     public String getSecretkey() {
@@ -74,17 +78,12 @@ public class DbcryptProperties {
         this.primaryKeyName = primaryKeyName;
     }
 
-    private static void check(String secretkey, Boolean enable, AesEnum aes) {
-        if (Objects.isNull(secretkey)) {
-            throw new IllegalArgumentException("secretkey not be null");
-        }
-        if (Objects.isNull(enable)) {
-            throw new IllegalArgumentException("enable not be null");
-        }
-        if (Objects.isNull(aes)) {
-            throw new IllegalArgumentException("aes not be null");
-        }
+    public static DbcryptProperties buildDefault() {
+        DbcryptProperties properties = new DbcryptProperties();
+        properties.setEnable(Boolean.TRUE);
+        properties.setAes(AesEnum.AES192);
+        properties.setPrimaryKeyName("id");
+        properties.setSecretkey("123456789012345678901234");
+        return properties;
     }
-
-
 }

@@ -1,16 +1,14 @@
 package com.kamjin.toolkit.db.crypt.core.handler;
 
-import com.kamjin.toolkit.db.crypt.core.enums.AesEnum;
-import com.kamjin.toolkit.db.crypt.core.exception.DbCryptRuntimeException;
+import com.kamjin.toolkit.db.crypt.core.bean.DbcryptProperties;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.crypto.*;
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.SecureRandom;
-import java.util.Objects;
 
 /**
  * @author kam
@@ -24,24 +22,11 @@ public class DefaultAESCodecFieldValueHandler extends AbstractCodecFiledValueHan
 
     private static final Logger log = LoggerFactory.getLogger(DefaultAESCodecFieldValueHandler.class);
 
-    private String secretKey = "123456789012345678901234";
-
-    private AesEnum aesEnum = AesEnum.AES192;
-
-    public String getSecretKey() {
-        return secretKey;
+    private DefaultAESCodecFieldValueHandler() {
     }
 
-    public void setSecretKey(String secretKey) {
-        this.secretKey = secretKey;
-    }
-
-    public AesEnum getAesEnum() {
-        return aesEnum;
-    }
-
-    public void setAesEnum(AesEnum aesEnum) {
-        this.aesEnum = aesEnum;
+    public DefaultAESCodecFieldValueHandler(DbcryptProperties dbcryptProperties) {
+        super(dbcryptProperties);
     }
 
     private static final String CRYPT_WAY = "AES";
@@ -54,8 +39,8 @@ public class DefaultAESCodecFieldValueHandler extends AbstractCodecFiledValueHan
         try {
             KeyGenerator kgen = KeyGenerator.getInstance(CRYPT_WAY);
             SecureRandom secureRandom = SecureRandom.getInstance(SECURE_RANDOM_INSTANCE_NAME);
-            secureRandom.setSeed(checkOrGetDbCryptSecretKey().getBytes());
-            kgen.init(checkOrGetDbCryptSupport(), secureRandom);
+            secureRandom.setSeed(this.getDbcryptProperties().getSecretkey().getBytes());
+            kgen.init(this.getDbcryptProperties().getAes().getStandSupport(), secureRandom);
 
             byte[] encodeFormat = kgen.generateKey().getEncoded();
             SecretKeySpec skeySpec = new SecretKeySpec(encodeFormat, CRYPT_WAY);
@@ -77,10 +62,10 @@ public class DefaultAESCodecFieldValueHandler extends AbstractCodecFiledValueHan
         try {
             KeyGenerator kgen = KeyGenerator.getInstance(CRYPT_WAY);
             SecureRandom secureRandom = SecureRandom.getInstance(SECURE_RANDOM_INSTANCE_NAME);
-            secureRandom.setSeed(checkOrGetDbCryptSecretKey().getBytes());
+            secureRandom.setSeed(this.getDbcryptProperties().getSecretkey().getBytes());
 
             // kgen.init(checkOrGetDbCryptSupport(), new SecureRandom(sKey.getBytes()));
-            kgen.init(checkOrGetDbCryptSupport(), secureRandom);
+            kgen.init(this.getDbcryptProperties().getAes().getStandSupport(), secureRandom);
 
             SecretKeySpec secretKeySpec = new SecretKeySpec(kgen.generateKey().getEncoded(), CRYPT_WAY);
             Cipher cipher = Cipher.getInstance(ALGORITHM_MODE_COMPLEMENT);
@@ -94,35 +79,4 @@ public class DefaultAESCodecFieldValueHandler extends AbstractCodecFiledValueHan
         return sSrc;
     }
 
-    private String checkOrGetDbCryptSecretKey() {
-        String secretkey = getSecretKey();
-        checkKey(secretkey);
-        return secretkey;
-    }
-
-    private int checkOrGetDbCryptSupport() {
-        return checkOrGetAesEnum().getStandSupport();
-    }
-
-    private AesEnum checkOrGetAesEnum() {
-        AesEnum aesEnum = getAesEnum();
-        if (Objects.isNull(aesEnum)) {
-            throw new DbCryptRuntimeException("dbcrypt initialized faild");
-        }
-        return aesEnum;
-    }
-
-    /**
-     * 检查SecretKey
-     *
-     * @param sKey secretKey
-     */
-    private void checkKey(String sKey) {
-        if (Objects.isNull(sKey) || StringUtils.isBlank(sKey)) {
-            throw new DbCryptRuntimeException("secretkey not blank");
-        }
-        if (sKey.length() != checkOrGetAesEnum().getSecretKeyLength()) {
-            throw new DbCryptRuntimeException("secretkey length not support,[" + sKey.length() + "]");
-        }
-    }
 }

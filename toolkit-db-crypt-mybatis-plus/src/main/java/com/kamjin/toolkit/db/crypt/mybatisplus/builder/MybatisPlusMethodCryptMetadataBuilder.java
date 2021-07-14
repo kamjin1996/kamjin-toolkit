@@ -21,7 +21,7 @@ public class MybatisPlusMethodCryptMetadataBuilder extends MybatisMethodCryptMet
 
     @Override
     protected MethodEncryptResolver buildEncryptResolver(Method m) {
-        if (m.getDeclaringClass().isAssignableFrom(BaseMapper.class)) {
+        if (BaseMapper.class.isAssignableFrom(m.getDeclaringClass())) {
             return new SimpleMethodEncryptResolver();
         }
         return super.buildEncryptResolver(m);
