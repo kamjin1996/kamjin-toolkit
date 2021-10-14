@@ -3,10 +3,13 @@ package com.kamjin.toolkit.db.crypt.mybatisplus.interceptor;
 import com.baomidou.mybatisplus.core.conditions.AbstractWrapper;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
+import com.kamjin.toolkit.db.crypt.core.annotation.CryptField;
 import com.kamjin.toolkit.db.crypt.core.bean.DbcryptProperties;
 import com.kamjin.toolkit.db.crypt.core.exception.DbCryptRuntimeException;
+import com.kamjin.toolkit.db.crypt.core.executor.CryptExecutor;
+import com.kamjin.toolkit.db.crypt.core.executor.CryptExecutorFactory;
+import com.kamjin.toolkit.db.crypt.core.executor.DefaultCryptExecutor;
 import com.kamjin.toolkit.db.crypt.core.handler.CodecFieldValueHandler;
-import com.kamjin.toolkit.db.crypt.core.handler.DefaultAESCodecFieldValueHandler;
 import com.kamjin.toolkit.db.crypt.core.resolver.MethodCryptMetadata;
 import com.kamjin.toolkit.db.crypt.core.resolver.MethodDecryptResolver;
 import com.kamjin.toolkit.db.crypt.core.resolver.SimpleMethodDecryptResolver;
@@ -61,9 +64,9 @@ public class MybatisPlusCryptInterceptor implements Interceptor {
     private DbcryptProperties dbcryptProperties;
 
     /**
-     * 字段值codec处理器
+     * 是否注册了mp的内部分页插件
      */
-    private CodecFieldValueHandler codecFieldValueHandler;
+    private boolean registeredPaginationInterceptor = false;
 
     /**
      * 唯一结果处理
@@ -80,21 +83,15 @@ public class MybatisPlusCryptInterceptor implements Interceptor {
      */
     private static final ThreadLocal<PreCodecMetadata> CODEC_METADATA_THREAD_LOCAL = new ThreadLocal<>();
 
-    public MybatisPlusCryptInterceptor(DbcryptProperties dbcryptProperties) {
-        this(dbcryptProperties, new DefaultAESCodecFieldValueHandler(dbcryptProperties));
-    }
-
-    public MybatisPlusCryptInterceptor(DbcryptProperties dbcryptProperties, CodecFieldValueHandler codecFieldValueHandler) {
+    public MybatisPlusCryptInterceptor(DbcryptProperties dbcryptProperties, CryptExecutor cryptExecutor) {
         if (Objects.isNull(dbcryptProperties)) {
             throw new DbCryptRuntimeException("dbcryptProperties must not null");
         }
-        if (Objects.isNull(codecFieldValueHandler)) {
-            throw new DbCryptRuntimeException("codecFieldValueHandler must not null");
-        }
         this.dbcryptProperties = dbcryptProperties;
-        this.codecFieldValueHandler = codecFieldValueHandler;
         this.simpleResultDecryptResolver = new SimpleMethodDecryptResolver();
         this.metadataCacheManager = new StatementCryptMetadataCacheManager();
+
+        CryptExecutorFactory.registry(cryptExecutor);//注册executor
     }
 
     private MybatisPlusCryptInterceptor() {
@@ -167,7 +164,7 @@ public class MybatisPlusCryptInterceptor implements Interceptor {
         }
 
         if (Objects.nonNull(wrapper)) {
-            Collection<String> cachedMethodMqPlaceHolders = this.metadataCacheManager.getCachedMethodMqPlaceHolders(wrapper, metadata, boundSql);
+            Map<String, CryptField> cachedMethodMqPlaceHolders = this.metadataCacheManager.getCachedMethodMqPlaceHolders(wrapper, metadata, boundSql);
             this.encryptParam(cachedMethodMqPlaceHolders, parameterObject);
         } else {
             MethodCryptMetadata metaData = this.metadataCacheManager.getCachedMethodCryptMetaData(metadata.getDaoStatementId(), metadata.getDaoRunningMethod());
@@ -187,14 +184,14 @@ public class MybatisPlusCryptInterceptor implements Interceptor {
      * @param paramObject         参数对象
      */
     @SuppressWarnings("all")
-    private void encryptParam(Collection<String> mqValuePlaceholders, Object paramObject) {
+    private void encryptParam(Map<String, CryptField> mqValuePlaceholders, Object paramObject) {
         if (CollectionUtils.isEmpty(mqValuePlaceholders)) {
             return;
         }
         Map ew = ((AbstractWrapper) ((MapperMethod.ParamMap) paramObject).get(Constants.WRAPPER)).getParamNameValuePairs();
-        for (String mqValuePlaceholder : mqValuePlaceholders) {
-            String oldVal = String.valueOf(ew.get(mqValuePlaceholder));
-            ew.put(mqValuePlaceholder, this.codecFieldValueHandler.encrypt(oldVal));
+        for (Map.Entry<String, CryptField> mqValuePlaceholder : mqValuePlaceholders.entrySet()) {
+            String oldVal = String.valueOf(ew.get(mqValuePlaceholder.getKey()));
+            ew.put(mqValuePlaceholder.getKey(), CryptExecutorFactory.getTypeHandler(mqValuePlaceholder.getValue()).encrypt(oldVal));
         }
     }
 
@@ -210,4 +207,12 @@ public class MybatisPlusCryptInterceptor implements Interceptor {
     private boolean isSwitchCrypt() {
         return this.dbcryptProperties.getEnable();
     }
+
+    /**
+     * @param registeredPaginationInterceptor
+     */
+    public void setRegisteredPaginationInterceptor(boolean registeredPaginationInterceptor) {
+        this.registeredPaginationInterceptor = registeredPaginationInterceptor;
+    }
+
 }

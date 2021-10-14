@@ -1,9 +1,11 @@
 package com.kamjin.toolkit.db.crypt.core.executor;
 
 import com.kamjin.toolkit.db.crypt.core.annotation.CryptField;
-import com.kamjin.toolkit.db.crypt.core.bean.DbcryptProperties;
 import com.kamjin.toolkit.db.crypt.core.exception.DbCryptRuntimeException;
-import com.kamjin.toolkit.db.crypt.core.handler.DefaultAESCodecFieldValueHandler;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * 加解密执行者工厂类
@@ -12,7 +14,25 @@ import com.kamjin.toolkit.db.crypt.core.handler.DefaultAESCodecFieldValueHandler
  */
 public class CryptExecutorFactory {
 
-    private static final CryptExecutor DEFAULT_HANDLER = new DefaultCryptExecutor(new DefaultAESCodecFieldValueHandler(DbcryptProperties.buildDefault()));
+    /**
+     * CryptExecutor.class和对象的映射
+     */
+    private static final Map<Class<? extends CryptExecutor>, CryptExecutor> EXECUTOR_MAPPING = new HashMap<>();
+
+    /**
+     * 默认Executor
+     */
+    private static DefaultCryptExecutor DEFAULT_CRYPT_EXECUTOR = null;
+
+    public static void registry(CryptExecutor executor) {
+        if (Objects.isNull(executor)) {
+            throw new DbCryptRuntimeException("CryptExecutor not be null");
+        }
+        if (executor instanceof DefaultCryptExecutor) {
+            DEFAULT_CRYPT_EXECUTOR = (DefaultCryptExecutor) executor;
+        }
+        EXECUTOR_MAPPING.put(executor.getClass(), executor);
+    }
 
     /**
      * 根据cryptField中不同的配置
@@ -21,14 +41,14 @@ public class CryptExecutorFactory {
      * @return CryptExecutor 加解密执行器
      */
     public static CryptExecutor getTypeHandler(CryptField cryptField) {
-        CryptExecutor cryptExecutor;
-
-        //TODO 支持其他的加密方式
-        if (cryptField.value() == DefaultCryptExecutor.class) {
-            cryptExecutor = DEFAULT_HANDLER;
-        } else {
-            throw new DbCryptRuntimeException("not support encrypt type [" + cryptField.value() + "]");
+        if (cryptField.value() == DefaultCryptExecutor.class) { //快速判断 无需从map中取
+            return DEFAULT_CRYPT_EXECUTOR;
         }
-        return cryptExecutor;
+
+        CryptExecutor executor = EXECUTOR_MAPPING.get(cryptField.value());
+        if (Objects.isNull(executor)) {
+            throw new DbCryptRuntimeException("not found registered cryptExecutor bean: [" + cryptField.value() + "] please registry");
+        }
+        return executor;
     }
 }
