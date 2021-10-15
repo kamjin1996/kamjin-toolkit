@@ -1,7 +1,7 @@
 {
   "properties": [
     {
-      "name": "dbcrypt.aes",
+      "name": "kamjin.dbcrypt.aes",
       "type": "java.lang.Enum",
       "description": "aes标准.",
       "defaultValue": "AES192",
@@ -18,19 +18,19 @@
       ]
     },
     {
-      "name": "dbcrypt.secretkey",
+      "name": "kamjin.dbcrypt.secretkey",
       "type": "java.lang.String",
       "description": "加密所需要的密钥，自定义时需要符合aes的标准，比如192标准密钥必须24位.",
       "defaultValue": "123456789012345678901234"
     },
     {
-      "name": "dbcrypt.primaryKeyName",
+      "name": "kamjin.dbcrypt.primaryKeyName",
       "type": "java.lang.String",
       "description": "pojo中统一的主键ID字段名称.",
       "defaultValue": "id"
     },
     {
-      "name": "dbcrypt.enable",
+      "name": "kamjin.dbcrypt.enable",
       "type": "java.lang.Boolean",
       "description": "是否启用加密插件.",
       "defaultValue": true

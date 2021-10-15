@@ -23,7 +23,7 @@ import org.springframework.core.annotation.Order;
 public class MybatisPlusCryptAutoConfiguration {
 
     @Bean
-    @ConfigurationProperties(prefix = "dbcrypt")
+    @ConfigurationProperties(prefix = "kamjin.dbcrypt")
     public DbcryptProperties dbcryptProperties() {
         return new DbcryptProperties();
     }
