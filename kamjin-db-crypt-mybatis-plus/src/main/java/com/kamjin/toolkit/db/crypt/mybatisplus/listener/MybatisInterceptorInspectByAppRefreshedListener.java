@@ -63,7 +63,7 @@ public class MybatisInterceptorInspectByAppRefreshedListener implements Applicat
                             //强制更改searchCount为false
                             ((Page<?>) page).setSearchCount(false);
                         } else {
-                            log.error("错误，当前还未支持非Page对象的操作，请使用Page或其子类作为mybatisplus的分页查询返回对象");
+                            log.error("错误，当前未支持非Page对象的操作，请使用Page或其子类作为mybatisplus的分页查询返回对象");
                         }
                     };
 

@@ -38,7 +38,7 @@ pom.xml文件写入以下坐标即可:
 
       <dependency>
           <groupId>com.github.kamjin1996</groupId>
-          <artifactId>toolkit-db-crypt-mybatis-plus</artifactId>
+          <artifactId>kamjin-db-crypt-mybatis-plus</artifactId>
           <version>${last.version}</version>
       </dependency>
 
@@ -154,7 +154,7 @@ The pom.xml file can be written in the following coordinates:
 
   <dependency>
       <groupId>com.github.kamjin1996</groupId>
-      <artifactId>toolkit-db-crypt-mybatis-plus</artifactId>
+      <artifactId>kamjin-db-crypt-mybatis-plus</artifactId>
       <version>${last.version}</version>
   </dependency>
 Configuration method:

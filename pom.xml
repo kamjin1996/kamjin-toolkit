@@ -6,12 +6,13 @@
     <groupId>com.github.kamjin1996</groupId>
     <artifactId>kamjin-toolkit</artifactId>
     <packaging>pom</packaging>
-    <version>2.2.3.RELEASE</version>
+    <version>2.3.0</version>
 
     <modules>
-        <module>toolkit-db-crypt-core</module>
-        <module>toolkit-db-crypt-mybatis</module>
-        <module>toolkit-db-crypt-mybatis-plus</module>
+        <module>kamjin-db-crypt-core</module>
+        <module>kamjin-db-crypt-mybatis</module>
+        <module>kamjin-db-crypt-mybatis-plus</module>
+        <module>kamjin-db-crypt-mybatis-plus-boot-starter</module>
     </modules>
 
     <properties>
@@ -19,7 +20,7 @@
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <release-version>2.2.3.RELEASE</release-version>
+        <release-version>2.3.0</release-version>
         <mybatis-version>3.5.6</mybatis-version>
         <mybatis-plus-version>3.3.0</mybatis-plus-version>
     </properties>
@@ -28,18 +29,24 @@
         <dependencies>
             <dependency>
                 <groupId>com.github.kamjin1996</groupId>
-                <artifactId>toolkit-db-crypt-core</artifactId>
+                <artifactId>kamjin-db-crypt-core</artifactId>
                 <version>${release-version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.kamjin1996</groupId>
-                <artifactId>toolkit-db-crypt-mybatis</artifactId>
+                <artifactId>kamjin-db-crypt-mybatis</artifactId>
                     <version>${release-version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.github.kamjin1996</groupId>
-                <artifactId>toolkit-db-crypt-mybatis-plus</artifactId>
+                <artifactId>kamjin-db-crypt-mybatis-plus</artifactId>
+                    <version>${release-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.kamjin1996</groupId>
+                <artifactId>kamjin-db-crypt-mybatis-plus-boot-starter</artifactId>
                     <version>${release-version}</version>
             </dependency>
 
