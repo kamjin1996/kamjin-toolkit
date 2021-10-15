@@ -38,6 +38,7 @@
 pom.xml文件写入以下坐标即可:
 
 + 基于mybatis-spring:
+
        <dependency>
            <groupId>com.github.kamjin1996</groupId>
            <artifactId>kamjin-db-crypt-mybatis</artifactId>
@@ -45,6 +46,7 @@ pom.xml文件写入以下坐标即可:
        </dependency>
 
 + 基于mybatis-plus-spring：
+
        <dependency>
            <groupId>com.github.kamjin1996</groupId>
            <artifactId>kamjin-db-crypt-mybatis-plus</artifactId>
@@ -60,8 +62,8 @@ pom.xml文件写入以下坐标即可:
        </dependency>
 
 #### 配置方式:
-
-一、starter方式：
+**
+一、starter方式（推荐）：**
     
     kamjin:
         dbcrypt:
@@ -71,8 +73,8 @@ pom.xml文件写入以下坐标即可:
          aes: AES192
    
    也可以不做配置，默认取上面的参数
-
-二、非starter配置方式:
+**
+二、非starter配置方式:**
 
 1). springboot的yaml配置方式：
 
@@ -111,6 +113,7 @@ pom.xml文件写入以下坐标即可:
         <plugins>
             <plugin interceptor="com.kamjin.toolkit.db.crypt.mybatisplus.interceptor.MybatisPlusCryptInterceptor"/>
         </plugins>
+        
 其他bean定义在xml中由spring维护即可
 
 #### 使用方式:
