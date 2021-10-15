@@ -29,8 +29,7 @@
 + 使用简单灵活，只需在需加密的数据模型类字段上、或mapperInterface的方法参数前，加@CryptField 注解，便可对目标加解密
 
 + 配置方式简单灵活：
- +spring方式：配置密钥、加密标准、主键名称，可自定义配置项a.b.c形式
- +mybatisplus则支持starter方式: 只需依赖即可
+ +mybatisplus-springboot支持starter方式，可以无需配置，mybatis使用javaconfig，
 
 + 适用广，适用任何采用了Mybatis或MybatisPlus作为DAO层的JAVA项目
 
@@ -38,32 +37,33 @@
 
 pom.xml文件写入以下坐标即可:
 
-- 基于mybatis-spring:
-      <dependency>
-          <groupId>com.github.kamjin1996</groupId>
-          <artifactId>kamjin-db-crypt-mybatis</artifactId>
-          <version>${last.version}</version>
-      </dependency>
++ 基于mybatis-spring:
+       <dependency>
+           <groupId>com.github.kamjin1996</groupId>
+           <artifactId>kamjin-db-crypt-mybatis</artifactId>
+           <version>${last.version}</version>
+       </dependency>
 
-- 基于mybatis-plus-spring：
-      <dependency>
-          <groupId>com.github.kamjin1996</groupId>
-          <artifactId>kamjin-db-crypt-mybatis-plus</artifactId>
-          <version>${last.version}</version>
-      </dependency>
++ 基于mybatis-plus-spring：
+       <dependency>
+           <groupId>com.github.kamjin1996</groupId>
+           <artifactId>kamjin-db-crypt-mybatis-plus</artifactId>
+           <version>${last.version}</version>
+       </dependency>
 
-- 基于mybatis-plus-boot-stater:
-      <dependency>
-          <groupId>com.github.kamjin1996</groupId>
-          <artifactId>kamjin-db-crypt-mybatis-plus-boot-starter</artifactId>
-          <version>${last.version}</version>
-      </dependency>
++ 基于mybatis-plus-boot-stater:
+
+       <dependency>
+           <groupId>com.github.kamjin1996</groupId>
+           <artifactId>kamjin-db-crypt-mybatis-plus-boot-starter</artifactId>
+           <version>${last.version}</version>
+       </dependency>
 
 #### 配置方式:
 
 一、starter方式：
     
-       kamjin:
+    kamjin:
         dbcrypt:
          secretkey: 123456789012345678901234
          enable: true
@@ -75,17 +75,8 @@ pom.xml文件写入以下坐标即可:
 二、非starter配置方式:
 
 1). springboot的yaml配置方式：
-   _PS：关于参数的key，可以取任意参数，只要确保能被spring解析到即可。
-   
-  <code>
-       kamjin:
-        dbcrypt:
-         secretkey: 123456789012345678901234
-         enable: true
-         primary-key-name: id
-         aes: AES192
-  </code>
-       
+
+    同上starter的配置，PS:关于参数的key可以自定义,只要确保能被spring解析到即可       
 
 2). 新建配置类:
 
@@ -109,8 +100,9 @@ pom.xml文件写入以下坐标即可:
           public MybatisCryptInterceptor mybatisCryptInterceptor() {
               return new MybatisCryptInterceptor(new DbcryptProperties(aes, getSecretkey(), isEnable(), getPrimaryKeyName()));
           }
-      }
-
+        }
+        
+注意：如果需要用javaBeanConfig配置MybatisPlusCryptInterceptor对象等相关配置，还需要@bean创建MybatisInterceptorInspectByAppRefreshedListener到spring容器中
 
 配置完毕，注意上例中加密方式为AES192标准，如有需要请改为自己需要的标准，并且secretKey长度要匹配。
 <br>
