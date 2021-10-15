@@ -65,7 +65,7 @@ pom.xml文件写入以下坐标即可:
             primary-key-name: id
             aes: AES192
 
-**二、非starter配置方式:**<br>
+**二、非starter方式:**<br>
       1). application.yaml：
           同上starter的配置，PS:此方式关于参数的key可以自定义,只要确保能被spring解析到即可       
 
