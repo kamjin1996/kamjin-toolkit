@@ -42,7 +42,7 @@ public class StatementCryptMetadataCacheManager {
     /**
      * statement的唯一key（@see PreCodecMetadata.deduceStatementUniqueKey()）和MP生成的字段占位符缓存
      */
-    private static final ConcurrentHashMap<String, Map<String,CryptField>> STATEMENT_UNIQUE_KEY_PLACEHOLDERS_CACHE = new ConcurrentHashMap<>(128);
+    private static final ConcurrentHashMap<String, Map<String, CryptField>> STATEMENT_UNIQUE_KEY_PLACEHOLDERS_CACHE = new ConcurrentHashMap<>(128);
 
     /**
      * statement需加解密处理方法的信息
@@ -72,9 +72,10 @@ public class StatementCryptMetadataCacheManager {
      *
      * @param wrapper  本次使用的mybatisPlus的wrapper对象
      * @param metadata 预加密的参数元信息
+     * @param boundSql boundSql
      * @return mp参数占位符
      */
-    public Map<String,CryptField> getCachedMethodMqPlaceHolders(Wrapper<?> wrapper, PreCodecMetadata metadata, BoundSql boundSql) {
+    public Map<String, CryptField> getCachedMethodMqPlaceHolders(Wrapper<?> wrapper, PreCodecMetadata metadata, BoundSql boundSql) {
         return STATEMENT_UNIQUE_KEY_PLACEHOLDERS_CACHE.computeIfAbsent(metadata.deduceStatementUniqueKey(boundSql),
                 id -> this.resolverMpValuePlaceHolders(wrapper, metadata));
     }
@@ -98,7 +99,7 @@ public class StatementCryptMetadataCacheManager {
      * @param metadata 预加密的参数元信息
      * @return mp参数占位符
      */
-    private Map<String,CryptField> resolverMpValuePlaceHolders(Wrapper<?> wrapper, PreCodecMetadata metadata) {
+    private Map<String, CryptField> resolverMpValuePlaceHolders(Wrapper<?> wrapper, PreCodecMetadata metadata) {
         //查看类型 如果是lambadaQueryWrapper 需要解析SQLSegment，如果是lambadaUpdateWrapper 需要解析SQLSegment和setSql
         MergeSegments expression = wrapper.getExpression();
         if (Objects.isNull(expression)) {
@@ -122,12 +123,12 @@ public class StatementCryptMetadataCacheManager {
     /**
      * 解析sqlSegment获取需加密字段mq映射的key
      *
-     * @param sqlSegmentOrSetSqls sqlSegment或者setSql的列表
+     * @param sqlSegmentOrSetSqls     sqlSegment或者setSql的列表
      * @param beforeInterceptMetadata 加密的参数元信息
      * @return mp参数占位符
      */
-    private Map<String,CryptField> parseSqlSegmentOrSetSqlGainIndex(List<String> sqlSegmentOrSetSqls, PreCodecMetadata beforeInterceptMetadata) {
-        Map<String,CryptField> mqValuePlaceholders = new HashMap<>();
+    private Map<String, CryptField> parseSqlSegmentOrSetSqlGainIndex(List<String> sqlSegmentOrSetSqls, PreCodecMetadata beforeInterceptMetadata) {
+        Map<String, CryptField> mqValuePlaceholders = new HashMap<>();
         // 输入加解密的表字段（非变量名，需要取tableFiled中的value）列表 获取下标列表
         Map<String, CryptField> needCryptColumns = beforeInterceptMetadata.getNeedCryptColumns();
         needCryptColumns.entrySet().forEach(entry -> {
@@ -140,7 +141,7 @@ public class StatementCryptMetadataCacheManager {
                     String sub = sqlSegmentOrSetSql.substring(sqlSegmentOrSetSql.indexOf(entry.getKey()) + (entry.getKey() + "=#{ew.paramNameValuePairs.").length());
                     String mpgenvalIndex = sub.substring(sub.indexOf(Constants.WRAPPER_PARAM), sub.indexOf("}"));
                     if (StringUtils.isNotBlank(mpgenvalIndex)) {
-                        mqValuePlaceholders.put(mpgenvalIndex,entry.getValue());
+                        mqValuePlaceholders.put(mpgenvalIndex, entry.getValue());
                     }
                 }
             });
