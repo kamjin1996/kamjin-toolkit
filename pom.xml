@@ -103,6 +103,24 @@
                     </execution>
                 </executions>
             </plugin>
+
+             <!--将依赖也打入jar包的插件 仅用于本地测试-->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>single</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+        </plugin>
         </plugins>
     </build>
 
@@ -211,24 +229,6 @@
                   </execution>
                  </executions>
             </plugin>
-
-            <!--将依赖也打入jar包的插件 仅用于本地测试-->
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                    <executions>
-                        <execution>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>single</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                <configuration>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                </configuration>
-        </plugin>
 
         </plugins>
     </build>
