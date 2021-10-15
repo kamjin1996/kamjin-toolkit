@@ -70,13 +70,13 @@ pom.xml文件写入以下坐标即可:
          primary-key-name: id
          aes: AES192
    
-   也可以不做配置，默认取上面的参数，需要自定义请更改上面配置的值
+   也可以不做配置，默认取上面的参数
 
 二、非starter配置方式:
 
 1). springboot的yaml配置方式：
 
-    同上starter的配置，PS:关于参数的key可以自定义,只要确保能被spring解析到即可       
+    同上starter的配置，PS:此方式关于参数的key可以自定义,只要确保能被spring解析到即可       
 
 2). 新建配置类:
 
@@ -98,7 +98,7 @@ pom.xml文件写入以下坐标即可:
 
           @Bean
           public MybatisCryptInterceptor mybatisCryptInterceptor() {
-              return new MybatisCryptInterceptor(new DbcryptProperties(aes, getSecretkey(), isEnable(), getPrimaryKeyName()));
+              return new MybatisCryptInterceptor(new DbcryptProperties(aes, secretkey,enable, primaryKeyName));
           }
         }
         
