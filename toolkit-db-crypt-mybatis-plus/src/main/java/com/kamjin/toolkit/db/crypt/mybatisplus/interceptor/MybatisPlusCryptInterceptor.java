@@ -8,8 +8,6 @@ import com.kamjin.toolkit.db.crypt.core.bean.DbcryptProperties;
 import com.kamjin.toolkit.db.crypt.core.exception.DbCryptRuntimeException;
 import com.kamjin.toolkit.db.crypt.core.executor.CryptExecutor;
 import com.kamjin.toolkit.db.crypt.core.executor.CryptExecutorFactory;
-import com.kamjin.toolkit.db.crypt.core.executor.DefaultCryptExecutor;
-import com.kamjin.toolkit.db.crypt.core.handler.CodecFieldValueHandler;
 import com.kamjin.toolkit.db.crypt.core.resolver.MethodCryptMetadata;
 import com.kamjin.toolkit.db.crypt.core.resolver.MethodDecryptResolver;
 import com.kamjin.toolkit.db.crypt.core.resolver.SimpleMethodDecryptResolver;
@@ -31,7 +29,6 @@ import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
-import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
@@ -62,11 +59,6 @@ public class MybatisPlusCryptInterceptor implements Interceptor {
      * 数据库加密属性
      */
     private DbcryptProperties dbcryptProperties;
-
-    /**
-     * 是否注册了mp的内部分页插件
-     */
-    private boolean registeredPaginationInterceptor = false;
 
     /**
      * 唯一结果处理
@@ -111,7 +103,6 @@ public class MybatisPlusCryptInterceptor implements Interceptor {
             PreCodecMetadata metadata = this.metadataCacheManager.getCachedStatementPreCodecMetadata(mappedStatement.getId());
             CODEC_METADATA_THREAD_LOCAL.set(metadata);
             Object result = invocation.proceed();
-
             CryptHelper.cleanKeyGenerateReference();
             //结果解密处理
             return this.decryptResult(result);
@@ -206,13 +197,6 @@ public class MybatisPlusCryptInterceptor implements Interceptor {
 
     private boolean isSwitchCrypt() {
         return this.dbcryptProperties.getEnable();
-    }
-
-    /**
-     * @param registeredPaginationInterceptor
-     */
-    public void setRegisteredPaginationInterceptor(boolean registeredPaginationInterceptor) {
-        this.registeredPaginationInterceptor = registeredPaginationInterceptor;
     }
 
 }

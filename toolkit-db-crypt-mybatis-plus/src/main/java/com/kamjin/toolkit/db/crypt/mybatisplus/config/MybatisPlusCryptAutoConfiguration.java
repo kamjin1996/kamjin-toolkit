@@ -4,12 +4,11 @@ import com.kamjin.toolkit.db.crypt.core.bean.DbcryptProperties;
 import com.kamjin.toolkit.db.crypt.core.executor.DefaultCryptExecutor;
 import com.kamjin.toolkit.db.crypt.core.handler.DefaultAESCodecFieldValueHandler;
 import com.kamjin.toolkit.db.crypt.mybatisplus.interceptor.MybatisPlusCryptInterceptor;
-import com.kamjin.toolkit.db.crypt.mybatisplus.listener.MybatisplusConfigResolveByAppRefreshedListener;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 
 /**
  * @author kam
@@ -21,7 +20,6 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ConditionalOnClass(MybatisPlusCryptInterceptor.class)
-@EnableConfigurationProperties(DbcryptProperties.class)
 public class MybatisPlusCryptAutoConfiguration {
 
     @Bean
@@ -31,11 +29,7 @@ public class MybatisPlusCryptAutoConfiguration {
     }
 
     @Bean
-    public MybatisplusConfigResolveByAppRefreshedListener mybatisplusConfigResolveByAppRefreshedListener(MybatisPlusCryptInterceptor mybatisPlusCryptInterceptor) {
-        return new MybatisplusConfigResolveByAppRefreshedListener(mybatisPlusCryptInterceptor);
-    }
-
-    @Bean
+    @Order(-3)
     public MybatisPlusCryptInterceptor mybatisPlusCryptInterceptor(DbcryptProperties dbcryptProperties) {
         return new MybatisPlusCryptInterceptor(dbcryptProperties, new DefaultCryptExecutor(new DefaultAESCodecFieldValueHandler(dbcryptProperties)));
     }
