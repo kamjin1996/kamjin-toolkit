@@ -37,22 +37,6 @@
 
 pom.xml文件写入以下坐标即可:
 
-+ 基于mybatis-spring:
-
-       <dependency>
-           <groupId>com.github.kamjin1996</groupId>
-           <artifactId>kamjin-db-crypt-mybatis</artifactId>
-           <version>${last.version}</version>
-       </dependency>
-
-+ 基于mybatis-plus-spring：
-
-       <dependency>
-           <groupId>com.github.kamjin1996</groupId>
-           <artifactId>kamjin-db-crypt-mybatis-plus</artifactId>
-           <version>${last.version}</version>
-       </dependency>
-
 + 基于mybatis-plus-boot-stater:
 
        <dependency>
@@ -61,9 +45,19 @@ pom.xml文件写入以下坐标即可:
            <version>${last.version}</version>
        </dependency>
 
++ 基于mybatis-spring:
+
+       <dependency>
+           <groupId>com.github.kamjin1996</groupId>
+           <artifactId>kamjin-db-crypt-mybatis</artifactId>
+           <version>${last.version}</version>
+       </dependency>
+
 #### 配置方式:
 
 **一、starter方式（推荐）：**
+    
+    可以不做配置，默认取下面的参数
     
        kamjin:
            dbcrypt:
@@ -71,8 +65,6 @@ pom.xml文件写入以下坐标即可:
             enable: true
             primary-key-name: id
             aes: AES192
-
-      也可以不做配置，默认取上面的参数
 
 **二、非starter配置方式:**
 
