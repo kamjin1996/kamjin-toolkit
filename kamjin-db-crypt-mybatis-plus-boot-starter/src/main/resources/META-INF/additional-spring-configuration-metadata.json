@@ -1,10 +1,19 @@
 {
+  "groups": [
+    {
+      "name": "kamjin.dbcrypt",
+      "type": "com.kamjin.toolkit.db.crypt.core.bean.DbcryptProperties",
+      "sourceType": "com.kamjin.toolkit.db.crypt.core.bean.DbcryptProperties",
+      "description": "数据库加密配置"
+    }
+  ],
   "properties": [
     {
       "name": "kamjin.dbcrypt.aes",
       "type": "java.lang.Enum",
       "description": "aes标准.",
       "defaultValue": "AES192",
+      "sourceType": "com.kamjin.toolkit.db.crypt.core.bean.DbcryptProperties",
       "values": [
         {
           "value": "AES128"
@@ -21,18 +30,21 @@
       "name": "kamjin.dbcrypt.secretkey",
       "type": "java.lang.String",
       "description": "加密所需要的密钥，自定义时需要符合aes的标准，比如192标准密钥必须24位.",
+      "sourceType": "com.kamjin.toolkit.db.crypt.core.bean.DbcryptProperties",
       "defaultValue": "123456789012345678901234"
     },
     {
-      "name": "kamjin.dbcrypt.primaryKeyName",
+      "name": "kamjin.dbcrypt.primary-key-name",
       "type": "java.lang.String",
       "description": "pojo中统一的主键ID字段名称.",
+      "sourceType": "com.kamjin.toolkit.db.crypt.core.bean.DbcryptProperties",
       "defaultValue": "id"
     },
     {
       "name": "kamjin.dbcrypt.enable",
       "type": "java.lang.Boolean",
       "description": "是否启用加密插件.",
+      "sourceType": "com.kamjin.toolkit.db.crypt.core.bean.DbcryptProperties",
       "defaultValue": true
     }
   ]

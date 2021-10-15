@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Implementation-Title: MybatisPlus CryptInterceptor
-Implementation-Version: 2.2.3.RELEASE
+Implementation-Version: 2.3.0
 Built-By: kamjin1996
 Build-Jdk-Spec: 1.8
 Created-By: Maven Archiver 3.4.5
