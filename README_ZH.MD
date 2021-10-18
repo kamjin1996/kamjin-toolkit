@@ -13,14 +13,12 @@
    <a href="#db.crypt">2.虚位以待</a><br>
    <a href="#db.crypt">3...</a><br>
 
+<br>
 
 <h3><div id="db.crypt">数据库加解密</div></h3>
 
-<br>
 
  简单快捷的数据加解密插件，支持全局数据库加密 -> 入库加密 & 出库解密
-
-<br>
 
 #### 主要有以下特点：
 
@@ -55,6 +53,8 @@ pom.xml文件写入以下坐标即可:
 
 #### 配置方式:
 
+<br>
+
 **一、starter方式（推荐）：**<br>
     可以不做配置，默认取下面的参数
     
@@ -74,6 +74,7 @@ pom.xml文件写入以下坐标即可:
 | kamjin.dbcrypt.primary-key-name  | pojo中数据库表主键ID统一所对应的字段名称，一般为"id"，可自定义 | id |
 | kamjin.dbcrypt.aes  | aes加密标准枚举值 可选值AES128、AES192、AES256 | AES192 |
       
+<br>
 
 **二、非starter方式:**<br>
       1). application.yaml：
