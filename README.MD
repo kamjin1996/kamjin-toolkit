@@ -60,7 +60,9 @@ The pom.xml file can be written in the following coordinates:
 
 #### Configuration method:
 
-**1. Starter method (recommended): **<br>
+**1. Starter method (recommended): **
+
+<br>
     No configuration is required, the following parameters are taken by default
     
        kamjin:
@@ -80,7 +82,9 @@ The pom.xml file can be written in the following coordinates:
 | kamjin.dbcrypt.aes | aes encryption standard enumeration value Optional values ​​AES128, AES192, AES256 | AES192 |
       
 
-**Two, non-starter method: **<br>
+**Two, non-starter method: **
+
+<br>
       1). application.yaml:
           Same as the starter configuration, PS: The key of the parameter can be customized in this way, as long as it can be parsed by spring.
 
