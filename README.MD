@@ -64,6 +64,16 @@ pom.xml文件写入以下坐标即可:
             enable: true
             primary-key-name: id
             aes: AES192
+            
+            
+   ###### 配置释义：
+   |  项   | 释义  | 默认值 |
+|  ----  | ----  | ----  |
+| kamjin.dbcrypt.secretkey  | aes加密所需的密钥，注意长度需要与所选aes标准匹配 比如aes192对应的密钥长度就是24位 | 123456789012345678901234 |
+| kamjin.dbcrypt.enable  | 是否启用插件，true或false | true |
+| kamjin.dbcrypt.primary-key-name  | pojo中数据库表主键ID统一所对应的字段名称，一般为"id"，可自定义 | id |
+| kamjin.dbcrypt.aes  | aes加密标准枚举值 可选值AES128、AES192、AES256 | AES192 |
+      
 
 **二、非starter方式:**<br>
       1). application.yaml：
@@ -95,7 +105,7 @@ pom.xml文件写入以下坐标即可:
         
  注意：如果需要用javaBeanConfig配置MybatisPlusCryptInterceptor对象等相关配置，还需要@bean创建MybatisInterceptorInspectByAppRefreshedListener到spring容器中
 
- 配置完毕，注意上例中加密方式为AES192标准，如有需要请改为自己需要的标准，并且secretKey长度要匹配。
+ 配置完毕
 <br>
  项目如果较久远，采用mybatis.xml注册插件：
 
@@ -104,6 +114,7 @@ pom.xml文件写入以下坐标即可:
         </plugins>
         
  其他bean定义在xml中由spring维护即可
+ 
 
 #### 使用方式:
 
@@ -144,100 +155,148 @@ https://github.com/kamjin1996/cryptdemo
 
 <br>
 
-Description:
-
+## illustrate:
+ 
+ <br>
 A toolkit that can be integrated in any java project, providing some framework supplements, extensions and easy-to-use packaging. The direction is to make project development easier and faster, and the code becomes concise, not limited to any code
-Function catalog:
-1. Database encryption and decryption
-2. Waiting
-3...
+<br>
 
-Database encryption and decryption
-
-Simple and fast data encryption and decryption plug-in, supports global database encryption -> inbound encryption & outbound decryption
+### Function list:
+   <a href="#db.crypt">1. Database encryption and decryption</a><br>
+   <a href="#db.crypt">2. Wait for it</a><br>
+   <a href="#db.crypt">3...</a><br>
 
 
-Mainly have the following characteristics:
-Lightweight, relying in the form of jar package, minimal intrusion
+<h3><div id="db.crypt">Database encryption and decryption</div></h3>
 
-Simple and flexible to use, just add @CryptField annotation on the data model field to be encrypted or before the method parameter of mapperInterface, then the target can be encrypted and decrypted
+<br>
 
-The configuration method is simple and flexible. You only need to configure the key, encryption method and primary key name, and the configuration item a.b.c form can be customized
+ Simple and fast data encryption and decryption plug-in, supports global database encryption -> inbound encryption & outbound decryption
 
-Widely applicable, applicable to any JAVA project that uses Mybatis or MybatisPlus as the DAO layer
+<br>
 
-rely:
+#### Mainly have the following characteristics:
+
++ Lightweight, relying in the form of jar package, minimal intrusion
+
++ Simple and flexible to use, just add @CryptField annotation on the data model field to be encrypted or before the method parameter of mapperInterface, then the target can be encrypted and decrypted
+
++ The configuration method is simple and flexible:
+ +mybatisplus-springboot supports starter mode, no configuration is required, mybatis uses javaconfig,
+
++ Wide application, applicable to any JAVA project that uses Mybatis or MybatisPlus as the DAO layer
+
+#### Dependence:
+
 The pom.xml file can be written in the following coordinates:
 
-  <dependency>
-      <groupId>com.github.kamjin1996</groupId>
-      <artifactId>kamjin-db-crypt-mybatis-plus</artifactId>
-      <version>${last.version}</version>
-  </dependency>
-Configuration method:
-Springboot's yam configuration method: _PS: Regarding the parameter key, you can take any parameter, as long as it can be parsed by spring.
++ Based on mybatis-plus-boot-stater:
 
-dbcrypt:
-  secretkey: 123456789012345678901234 #Encrypted secretkey, need to pay attention to the length, if it is AES encryption (default), it needs to match the AES encryption
-  enable: true #Whether the encryption and decryption of the current plug-in is enabled
-  primaryKeyName: id #pojo as the name of the id field, not the database name
-New configuration class:
+       <dependency>
+           <groupId>com.github.kamjin1996</groupId>
+           <artifactId>kamjin-db-crypt-mybatis-plus-boot-starter</artifactId>
+           <version>${last.version}</version>
+       </dependency>
 
- @Configuration
- @Data
- public class MybatisCryptConfig {
++ Based on mybatis-spring:
 
-   @Value("${dbcrypt.secretkey}")
-   private String secretkey;
+       <dependency>
+           <groupId>com.github.kamjin1996</groupId>
+           <artifactId>kamjin-db-crypt-mybatis</artifactId>
+           <version>${last.version}</version>
+       </dependency>
 
-   @Value("${dbcrypt.enable}")
-   private boolean enable;
+#### Configuration method:
 
-   @Value("${dbcrypt.primaryKeyName}")
-   private String primaryKeyName;
+**1. Starter method (recommended): **<br>
+    No configuration is required, the following parameters are taken by default
+    
+       kamjin:
+           dbcrypt:
+            secretkey: 123456789012345678901234
+            enable: true
+            primary-key-name: id
+            aes: AES192
+            
+            
+   ###### Configuration Interpretation:
+   | Item | Interpretation | Default Value |
+| ---- | ---- | ---- |
+| kamjin.dbcrypt.secretkey | The key required for aes encryption. Note that the length needs to match the selected aes standard. For example, the key length corresponding to aes192 is 24 bits | 123456789012345678901234 |
+| kamjin.dbcrypt.enable | Whether to enable the plug-in, true or false | true |
+| kamjin.dbcrypt.primary-key-name | The field name corresponding to the unified primary key ID of the database table in pojo, generally "id", which can be customized | id |
+| kamjin.dbcrypt.aes | aes encryption standard enumeration value Optional values ​​AES128, AES192, AES256 | AES192 |
+      
 
-   @Bean
-   public MybatisPlusCryptInterceptor mybatisPlusCryptInterceptor() {
-       return new MybatisPlusCryptInterceptor();
-   }
+**Two, non-starter method: **<br>
+      1). application.yaml:
+          Same as the starter configuration, PS: The key of the parameter can be customized in this way, as long as it can be parsed by spring.
 
-   @Bean
-   public DbcryptProperties dbcrypt() {
-       return new DbcryptProperties(AesEnum.AES192, getSecretkey(), isEnable(), getPrimaryKeyName());
-   }
-}
+      2). New configuration class:
 
-After the configuration is completed, note that the encryption method in the above example is the AES192 standard, if necessary, please change to the standard you need, and the secretKey length must match.
-If the project is longer, use mybatis.xml to register the plug-in:
+        @Configuration
+        @Data
+        public class KamjinDbCryptConfig {
 
-    <plugins>
-        <plugin interceptor="com.kamjin.toolkit.db.crypt.mybatisplus.interceptor.MybatisPlusCryptInterceptor"/>
-    </plugins>
-Other bean definitions can be maintained by spring in xml
+          @Value("${kamjin.dbcrypt.secretkey}")
+          private String secretkey;
 
-How to use:
+          @Value("${kamjin.dbcrypt.enable}")
+          private boolean enable;
+
+          @Value("${kamjin.dbcrypt.primary-key-name}")
+          private String primaryKeyName;
+
+          @Value("${kamjin.dbcrypt.aes}")
+          private AesEnum aes;
+
+          @Bean
+          public MybatisCryptInterceptor mybatisCryptInterceptor() {
+              return new MybatisCryptInterceptor(new DbcryptProperties(aes, secretkey,enable, primaryKeyName));
+          }
+        }
+        
+ Note: If you need to use javaBeanConfig to configure the MybatisPlusCryptInterceptor object and other related configurations, you also need @bean to create MybatisInterceptorInspectByAppRefreshedListener into the spring container
+
+ Configured
+<br>
+ If the project is longer, use mybatis.xml to register the plug-in:
+
+        <plugins>
+            <plugin interceptor="com.kamjin.toolkit.db.crypt.mybatisplus.interceptor.MybatisPlusCryptInterceptor"/>
+        </plugins>
+        
+ Other bean definitions can be maintained by spring in xml
+ 
+
+#### How to use:
+
 Class field annotation @CryptField, also supports annotation @CryptField before the mapper enters parameters
 
 Common usage, annotations on pojo fields
 
-Use on the field
++ Use on the field
 
-@CryptField private String password;
-Use mapper as a parameter
+      @CryptField private String password;
 
-User selectByMobile(@CryptField @Param("mobile") String mobile);
-_Attach the quick start demo address: https://github.com/kamjin1996/cryptdemo
++ Use mapper to enter the parameters
 
-Special Note:
-1. The example class (used for conditional splicing query) generated by mybatis in reverse is not supported. Even if the example class is used as the input parameter of the conditional query, if the example is useful in the project, and you want to encrypt the fields in the condition, then you can change to the form of the entity class to perform the conditional query
+      User selectByMobile(@CryptField @Param("mobile") String mobile);
 
-2. Because the field encryption will change the original value and store it in the database, all fuzzy queries will become invalid. The keywords of the fuzzy query will be completely different strings after encryption, even if the unencrypted database strings are very similar to the keywords, it will not be possible. Query
+_Attach the quick start demo address:
+https://github.com/kamjin1996/cryptdemo
 
-3. If the project uses Mybatis, please use MybatisCryptInterceptor, if it is MybatisPlus, please use MybatisPlusCryptInterceptor, MybatisPlusCryptInterceptor is also compatible with Mybatis, but two plug-ins cannot be registered at the same time
+### Special Note:
+ 1. The example class (used for conditional splicing query) generated by mybatis in reverse is not supported. Even if the example class is used as the input parameter of the conditional query, if the example is useful in the project, and you want to encrypt the fields in the condition, then you can change to the form of the entity class to perform the conditional query
 
-At last:
-The project is maintained in my spare time, and we will consider supporting more functions and usage in the future.
+ 2. Because the field encryption will change the original value and store in the database, the fuzzy query will be invalid. The keywords of the fuzzy query will be completely different strings after encryption. Even if the unencrypted database strings are very similar to the keywords, they cannot be queried. of
 
-The performance of the current project has been slightly optimized, and there are not many logs, so you can use it with confidence
+ 3. If the project uses Mybatis, please use MybatisCryptInterceptor, if it is MybatisPlus, please use MybatisPlusCryptInterceptor, MybatisPlusCryptInterceptor is also compatible with Mybatis, but two plug-ins cannot be registered at the same time
 
-Welcome to put forward better opinions and help improve, contact me: QQ mailbox 1569558447@qq.com  
+## finally:
+
+-The code is maintained in my spare time, and we will consider supporting more functions and usage in the future
+
+-The performance of the current project has been slightly optimized, and there are not many logs, so you can use it with confidence
+
+-Welcome to put forward better opinions and help improve, contact me: QQ mailbox 1569558447@qq.com
