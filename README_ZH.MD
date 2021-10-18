@@ -100,7 +100,9 @@ pom.xml文件写入以下坐标即可:
 
           @Bean
           public MybatisCryptInterceptor mybatisCryptInterceptor() {
-              return new MybatisCryptInterceptor(new DbcryptProperties(aes, secretkey,enable, primaryKeyName));
+              DbcryptProperties properties = new DbcryptProperties(aes, secretkey, enable, primaryKeyName);
+              CryptExecutorFactory.registry(new DefaultCryptExecutor(new DefaultAESCodecFieldValueHandler(properties)));
+              return new MybatisCryptInterceptor(properties);
           }
         }
         
