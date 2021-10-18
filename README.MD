@@ -108,7 +108,9 @@ The pom.xml file can be written in the following coordinates:
 
           @Bean
           public MybatisCryptInterceptor mybatisCryptInterceptor() {
-              return new MybatisCryptInterceptor(new DbcryptProperties(aes, secretkey,enable, primaryKeyName));
+              DbcryptProperties properties = new DbcryptProperties(aes, secretkey, enable, primaryKeyName);
+              CryptExecutorFactory.registry(new DefaultCryptExecutor(new DefaultAESCodecFieldValueHandler(properties)));
+              return new MybatisCryptInterceptor(properties);
           }
         }
         
