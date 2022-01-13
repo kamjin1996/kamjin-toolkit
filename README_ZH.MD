@@ -10,8 +10,7 @@
 
 ### 功能目录：
    <a href="#db.crypt">1.数据库加解密</a><br>
-   <a href="#db.crypt">2.虚位以待</a><br>
-   <a href="#db.crypt">3...</a><br>
+   <a href="#db.crypt">2...</a><br>
 
 <br>
 
