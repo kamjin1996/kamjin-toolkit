@@ -1,48 +1,40 @@
 ![](https://ftp.bmp.ovh/imgs/2019/12/9fdfb3fbd3e6225d.jpeg)
 
+[English](README_ENG.MD) | 中文文档
 
-<br>
-<div id = "englishRead"></div>
+## 说明：
 
-<br>
-
-English | [中文文档](README_ZH.MD)
-## illustrate:
- 
  <br>
-A toolkit that can be integrated in any java project, providing some framework supplements, extensions and easy-to-use packaging. The direction is to make project development easier and faster, and the code becomes concise, not limited to any code
+可以在任何java项目集成的工具包，提供一些框架的补充、拓展和易用性封装，方向是让项目开发变得更加容易，更快速，代码变得简洁，不局限于任何代码
 <br>
 
-### Function list:
-   <a href="#db.crypt">1. Database encryption and decryption</a><br>
-   <a href="#db.crypt">2. Wait for it</a><br>
-   <a href="#db.crypt">3...</a><br>
-
-
-<h3><div id="db.crypt">Database encryption and decryption</div></h3>
+### 功能目录：
+<a href="#db.crypt">1.数据库加解密</a><br>
+<a href="#db.crypt">2...</a><br>
 
 <br>
 
- Simple and fast data encryption and decryption plug-in, supports global database encryption -> inbound encryption & outbound decryption
+<h3><div id="db.crypt">数据库加解密</div></h3>
 
-<br>
 
-#### Mainly have the following characteristics:
+简单快捷的数据加解密插件，支持全局数据库加密 -> 入库加密 & 出库解密
 
-+ Lightweight, relying in the form of jar package, minimal intrusion
+#### 主要有以下特点：
 
-+ Simple and flexible to use, just add @CryptField annotation on the data model field to be encrypted or before the method parameter of mapperInterface, then the target can be encrypted and decrypted
++ 轻量级，采用jar包的形式依赖，侵入极小
 
-+ The configuration method is simple and flexible:
- +mybatisplus-springboot supports starter mode, no configuration is required, mybatis uses javaconfig,
++ 使用简单灵活，只需在需加密的数据模型类字段上、或mapperInterface的方法参数前，加@CryptField 注解，便可对目标加解密
 
-+ Wide application, applicable to any JAVA project that uses Mybatis or MybatisPlus as the DAO layer
++ 配置方式简单灵活：
+  +mybatisplus-springboot支持starter方式，可以无需配置，mybatis使用javaconfig，
 
-#### Dependence:
++ 适用广，适用任何采用了Mybatis或MybatisPlus作为DAO层的JAVA项目
 
-The pom.xml file can be written in the following coordinates:
+#### 依赖：
 
-+ Based on mybatis-plus-boot-stater:
+pom.xml文件写入以下坐标即可:
+
++ 基于mybatis-plus-boot-stater:
 
        <dependency>
            <groupId>com.github.kamjin1996</groupId>
@@ -50,7 +42,7 @@ The pom.xml file can be written in the following coordinates:
            <version>${last.version}</version>
        </dependency>
 
-+ Based on mybatis-spring:
++ 基于mybatis-spring:
 
        <dependency>
            <groupId>com.github.kamjin1996</groupId>
@@ -58,37 +50,36 @@ The pom.xml file can be written in the following coordinates:
            <version>${last.version}</version>
        </dependency>
 
-#### Configuration method:
-
-**1. Starter method (recommended): **
+#### 配置方式:
 
 <br>
-    No configuration is required, the following parameters are taken by default
-    
+
+**一、starter方式（推荐）：**<br>
+可以不做配置，默认取下面的参数
+
        kamjin:
            dbcrypt:
             secretkey: 123456789012345678901234
             enable: true
             primary-key-name: id
             aes: AES192
-            
-            
-   ###### Configuration Interpretation:
-   | Item | Interpretation | Default Value |
-| ---- | ---- | ---- |
-| kamjin.dbcrypt.secretkey | The key required for aes encryption. Note that the length needs to match the selected aes standard. For example, the key length corresponding to aes192 is 24 bits | 123456789012345678901234 |
-| kamjin.dbcrypt.enable | Whether to enable the plug-in, true or false | true |
-| kamjin.dbcrypt.primary-key-name | The field name corresponding to the unified primary key ID of the database table in pojo, generally "id", which can be customized | id |
-| kamjin.dbcrypt.aes | aes encryption standard enumeration value Optional values ​​AES128, AES192, AES256 | AES192 |
-      
 
-**Two, non-starter method: **
+
+###### 配置释义：
+|  项   | 释义  | 默认值 |
+|  ----  | ----  | ----  |
+| kamjin.dbcrypt.secretkey  | aes加密所需的密钥，注意长度需要与所选aes标准匹配 比如aes192对应的密钥长度就是24位 | 123456789012345678901234 |
+| kamjin.dbcrypt.enable  | 是否启用插件，true或false | true |
+| kamjin.dbcrypt.primary-key-name  | pojo中数据库表主键ID统一所对应的字段名称，一般为"id"，可自定义 | id |
+| kamjin.dbcrypt.aes  | aes加密标准枚举值 可选值AES128、AES192、AES256 | AES192 |
 
 <br>
-      1). application.yaml:
-          Same as the starter configuration, PS: The key of the parameter can be customized in this way, as long as it can be parsed by spring.
 
-      2). New configuration class:
+**二、非starter方式:**<br>
+1). application.yaml：
+同上starter的配置，PS:此方式关于参数的key可以自定义,只要确保能被spring解析到即可
+
+      2). 新建配置类:
 
         @Configuration
         @Data
@@ -113,48 +104,49 @@ The pom.xml file can be written in the following coordinates:
               return new MybatisCryptInterceptor(properties);
           }
         }
-        
- Note: If you need to use javaBeanConfig to configure the MybatisPlusCryptInterceptor object and other related configurations, you also need @bean to create MybatisInterceptorInspectByAppRefreshedListener into the spring container
 
- Configured
+注意：如果需要用javaBeanConfig配置MybatisPlusCryptInterceptor对象等相关配置，还需要@bean创建MybatisInterceptorInspectByAppRefreshedListener到spring容器中
+
+配置完毕
 <br>
- If the project is longer, use mybatis.xml to register the plug-in:
+项目如果较久远，采用mybatis.xml注册插件：
 
         <plugins>
             <plugin interceptor="com.kamjin.toolkit.db.crypt.mybatisplus.interceptor.MybatisPlusCryptInterceptor"/>
         </plugins>
-        
- Other bean definitions can be maintained by spring in xml
- 
 
-#### How to use:
+其他bean定义在xml中由spring维护即可
 
-Class field annotation @CryptField, also supports annotation @CryptField before the mapper enters parameters
 
-Common usage, annotations on pojo fields
+#### 使用方式:
 
-+ Use on the field
+类字段注解@CryptField，也支持在mapper入参前注解@CryptField
+
+常见用法，pojo的字段上注解
+
++ 字段上使用
 
       @CryptField private String password;
 
-+ Use mapper to enter the parameters
++ mapper入参使用
 
       User selectByMobile(@CryptField @Param("mobile") String mobile);
 
-_Attach the quick start demo address:
+_附上快速开始的demo地址：
 https://github.com/kamjin1996/cryptdemo
 
-### Special Note:
- 1. The example class (used for conditional splicing query) generated by mybatis in reverse is not supported. Even if the example class is used as the input parameter of the conditional query, if the example is useful in the project, and you want to encrypt the fields in the condition, then you can change to the form of the entity class to perform the conditional query
+### 特别说明：
+1.不支持mybatis逆向生成的example类（用于条件拼接查询）。 即使example类作为条件查询的入参，如果项目中有用到example的地方，又希望加密条件中的字段，那么改为实体类的形式进行条件查询即可
 
- 2. Because the field encryption will change the original value and store in the database, the fuzzy query will be invalid. The keywords of the fuzzy query will be completely different strings after encryption. Even if the unencrypted database strings are very similar to the keywords, they cannot be queried. of
+2.因为字段加密会改变原有值落库存储，模糊查询都将失效，模糊查询的关键词加密后是完全不同的字符串，即使未加密的数据库字符串与关键词很相似，也是无法查询的
 
- 3. If the project uses Mybatis, please use MybatisCryptInterceptor, if it is MybatisPlus, please use MybatisPlusCryptInterceptor, MybatisPlusCryptInterceptor is also compatible with Mybatis, but two plug-ins cannot be registered at the same time
+3.若项目使用Mybatis，请使用MybatisCryptInterceptor，如果是MybatisPlus，请使用MybatisPlusCryptInterceptor，MybatisPlusCryptInterceptor也兼容Mybatis，但不可同时注册两个插件
 
-## finally:
+## 最后：
 
--The code is maintained in my spare time, and we will consider supporting more functions and usage in the future
+- 代码是个人闲暇之余来维护的，后续会考虑支持更多的功能、用法
 
--The performance of the current project has been slightly optimized, and there are not many logs, so you can use it with confidence
+- 当前项目性能上做了些许优化，日志也并不多，可放心使用
 
--Welcome to put forward better opinions and help improve, contact me: QQ mailbox 1569558447@qq.com
+- 欢迎提出更好的意见，帮助完善，联系我：QQ邮箱1569558447@qq.com
+
