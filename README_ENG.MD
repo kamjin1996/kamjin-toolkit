@@ -157,4 +157,4 @@ https://github.com/kamjin1996/cryptdemo
 
 -The performance of the current project has been slightly optimized, and there are not many logs, so you can use it with confidence
 
--Welcome to put forward better opinions and help improve, contact me: QQ mailbox 1569558447@qq.com
+-Welcome to put forward better opinions and help improve
